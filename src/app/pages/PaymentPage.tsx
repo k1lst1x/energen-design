@@ -186,7 +186,7 @@ export const PaymentPage: React.FC = () => {
             }}
           >
             <Info size={16} style={{ color: '#7FB8A0', flexShrink: 0, marginTop: 2 }} />
-            <p style={{ fontSize: '0.82rem', color: 'var(--app-text-muted)', lineHeight: 1.55 }}>
+            <p style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)', lineHeight: 1.55 }}>
               При оплате обязательно укажите в назначении платежа ФИО студента и факультет.
               Сохраняйте квитанции об оплате.
             </p>
@@ -247,7 +247,7 @@ export const PaymentPage: React.FC = () => {
                     <div style={{ color: 'var(--app-text-strong)', fontWeight: 700, fontSize: '1rem', marginBottom: 2 }}>
                       {cat.title}
                     </div>
-                    <div style={{ color: 'var(--app-text-muted)', fontSize: '0.8rem' }}>{cat.subtitle}</div>
+                    <div style={{ color: 'var(--app-text-muted)', fontSize: '0.875rem' }}>{cat.subtitle}</div>
                   </div>
                   <div style={{ color: 'var(--app-icon-muted)', flexShrink: 0 }}>
                     {isExpanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
@@ -275,7 +275,7 @@ export const PaymentPage: React.FC = () => {
                             marginBottom: '1rem',
                           }}
                         >
-                          <p style={{ fontSize: '0.75rem', color: 'var(--app-text-soft)', fontWeight: 600, textAlign: 'center', marginBottom: '1rem' }}>
+                          <p style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)', fontWeight: 600, textAlign: 'center', marginBottom: '1rem' }}>
                             {cat.qrLabel}
                           </p>
                           <QRPlaceholder label={cat.qrLabel} color={cat.color} />
@@ -290,7 +290,7 @@ export const PaymentPage: React.FC = () => {
                                 border: `1px solid ${cat.border}`,
                                 background: cat.bg,
                                 color: cat.color,
-                                fontSize: '0.8rem',
+                                fontSize: '0.875rem',
                                 fontWeight: 600,
                                 cursor: 'pointer',
                                 display: 'flex',
@@ -325,7 +325,7 @@ export const PaymentPage: React.FC = () => {
                             }}
                           >
                             <Building size={14} style={{ color: cat.color }} />
-                            <span style={{ fontSize: '0.75rem', color: 'var(--app-text-soft)', fontWeight: 600 }}>
+                            <span style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)', fontWeight: 600 }}>
                               БАНК��ВСКИЕ РЕКВИЗИТЫ
                             </span>
                           </div>
@@ -352,11 +352,11 @@ export const PaymentPage: React.FC = () => {
                                   gap: 10,
                                 }}
                               >
-                                <span style={{ fontSize: '0.75rem', color: 'var(--app-text-soft)', flexShrink: 0 }}>
+                                <span style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)', flexShrink: 0 }}>
                                   {fieldLabels[key] || key}
                                 </span>
                                 <div className="flex items-center gap-2">
-                                  <span style={{ fontSize: '0.8rem', color: 'var(--app-text)', textAlign: 'right', wordBreak: 'break-all' }}>
+                                  <span style={{ fontSize: '0.875rem', color: 'var(--app-text)', textAlign: 'right', wordBreak: 'break-all' }}>
                                     {value}
                                   </span>
                                   <button
@@ -389,7 +389,7 @@ export const PaymentPage: React.FC = () => {
                             border: '1px solid var(--app-control-border)',
                             background: copiedField === `all-${cat.id}` ? 'rgba(127,184,160,0.1)' : 'transparent',
                             color: copiedField === `all-${cat.id}` ? 'var(--brand-mint-strong)' : 'var(--app-text-muted)',
-                            fontSize: '0.82rem',
+                            fontSize: '0.875rem',
                             fontWeight: 600,
                             cursor: 'pointer',
                             display: 'flex',
@@ -425,7 +425,7 @@ export const PaymentPage: React.FC = () => {
             background: 'var(--app-bg-soft)',
             border: '1px solid var(--app-border)',
             borderRadius: 14,
-            fontSize: '0.78rem',
+            fontSize: '0.875rem',
             color: 'var(--app-text-soft)',
             lineHeight: 1.6,
             textAlign: 'center',

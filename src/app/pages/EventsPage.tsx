@@ -128,7 +128,7 @@ export const EventsPage: React.FC = () => {
                 border: `1px solid ${activeFilter === f.key ? 'var(--brand-mint-strong)' : 'var(--app-control-border)'}`,
                 background: activeFilter === f.key ? 'var(--app-nav-active)' : 'var(--app-control)',
                 color: activeFilter === f.key ? 'var(--brand-mint-strong)' : 'var(--app-text-muted)',
-                fontSize: '0.82rem',
+                fontSize: '0.875rem',
                 fontWeight: activeFilter === f.key ? 600 : 400,
                 cursor: 'pointer',
                 transition: 'all 0.2s',
@@ -204,7 +204,7 @@ export const EventsPage: React.FC = () => {
                       <div style={{ fontSize: '1.3rem', fontWeight: 800, color: event.color, lineHeight: 1 }}>
                         {event.dateShort.day}
                       </div>
-                      <div style={{ fontSize: '0.6rem', color: 'var(--app-text-soft)', fontWeight: 600 }}>
+                      <div style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)', fontWeight: 600 }}>
                         {event.dateShort.month}
                       </div>
                     </div>
@@ -219,7 +219,7 @@ export const EventsPage: React.FC = () => {
                         border: `1px solid ${event.color}40`,
                         borderRadius: 20,
                         padding: '0.25rem 0.75rem',
-                        fontSize: '0.72rem',
+                        fontSize: '0.875rem',
                         color: event.color,
                         fontWeight: 600,
                       }}
@@ -233,18 +233,18 @@ export const EventsPage: React.FC = () => {
                     <h3 style={{ color: 'var(--app-text-strong)', fontWeight: 700, fontSize: '1rem', lineHeight: 1.4, margin: 0 }}>
                       {event.title}
                     </h3>
-                    <p style={{ fontSize: '0.83rem', color: 'var(--app-text-muted)', lineHeight: 1.55, margin: 0 }}>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)', lineHeight: 1.55, margin: 0 }}>
                       {event.description}
                     </p>
 
                     <div className="flex flex-col gap-1.5">
                       <div className="flex items-center gap-2">
                         <MapPin size={13} style={{ color: 'var(--app-icon-muted)', flexShrink: 0 }} />
-                        <span style={{ fontSize: '0.8rem', color: 'var(--app-text-muted)' }}>{event.location}</span>
+                        <span style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)' }}>{event.location}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Users size={13} style={{ color: 'var(--app-icon-muted)', flexShrink: 0 }} />
-                        <span style={{ fontSize: '0.8rem', color: 'var(--app-text-muted)' }}>
+                        <span style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)' }}>
                           {event.registered} / {event.capacity} мест
                         </span>
                       </div>
@@ -270,7 +270,7 @@ export const EventsPage: React.FC = () => {
                           }}
                         />
                       </div>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--app-text-soft)', marginTop: 3 }}>
+                      <div style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)', marginTop: 3 }}>
                         {fillPct}% мест занято
                       </div>
                     </div>
@@ -287,7 +287,7 @@ export const EventsPage: React.FC = () => {
                           border: `1px solid ${isRegistered ? 'rgba(127,184,160,0.4)' : event.color + '40'}`,
                           background: isRegistered ? 'rgba(127,184,160,0.15)' : `${event.color}12`,
                           color: isRegistered ? 'var(--brand-mint-strong)' : event.color,
-                          fontSize: '0.82rem',
+                          fontSize: '0.875rem',
                           fontWeight: 700,
                           cursor: 'pointer',
                           transition: 'all 0.2s',

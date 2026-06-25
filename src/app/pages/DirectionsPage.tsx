@@ -178,7 +178,7 @@ export const DirectionsPage: React.FC = () => {
                 backdropFilter: 'blur(10px)',
                 borderRadius: 10,
                 padding: '0.5rem 0.875rem',
-                fontSize: '0.75rem',
+                fontSize: '0.875rem',
                 color: 'var(--brand-mint-strong)',
                 fontWeight: 600,
                 border: '1px solid rgba(127,184,160,0.2)',
@@ -199,7 +199,7 @@ export const DirectionsPage: React.FC = () => {
                 padding: '0.5rem 0.875rem',
                 border: '1px solid var(--app-border)',
                 color: 'var(--app-text)',
-                fontSize: '0.78rem',
+                fontSize: '0.875rem',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
@@ -239,8 +239,8 @@ export const DirectionsPage: React.FC = () => {
               <MapPin size={16} style={{ color: 'var(--brand-mint-strong)' }} />
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: '0.85rem', color: 'var(--app-text-strong)', fontWeight: 600 }}>{address}</div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--app-text-soft)', marginTop: 2 }}>Алматы, Казахстан</div>
+              <div style={{ fontSize: '0.875rem', color: 'var(--app-text-strong)', fontWeight: 600 }}>{address}</div>
+              <div style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)', marginTop: 2 }}>Алматы, Казахстан</div>
             </div>
             <button
               onClick={handleCopyAddress}
@@ -281,7 +281,7 @@ export const DirectionsPage: React.FC = () => {
                 border: '1px solid rgba(127,184,160,0.3)',
                 borderRadius: 20,
                 padding: '0.2rem 0.625rem',
-                fontSize: '0.72rem',
+                fontSize: '0.875rem',
                 color: 'var(--brand-mint-strong)',
                 fontWeight: 600,
               }}
@@ -296,10 +296,10 @@ export const DirectionsPage: React.FC = () => {
               { day: 'Воскресенье', time: 'Закрыто' },
             ].map(h => (
               <div key={h.day} className="flex justify-between">
-                <span style={{ fontSize: '0.85rem', color: 'var(--app-text-muted)' }}>{h.day}</span>
+                <span style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)' }}>{h.day}</span>
                 <span
                   style={{
-                    fontSize: '0.85rem',
+                    fontSize: '0.875rem',
                     color: h.time === 'Закрыто' ? 'var(--app-disabled-text)' : 'var(--app-text)',
                     fontWeight: 600,
                   }}
@@ -353,7 +353,7 @@ export const DirectionsPage: React.FC = () => {
                   <Icon size={18} style={{ color: isActive ? opt.color : 'var(--app-icon-muted)' }} />
                   <span
                     style={{
-                      fontSize: '0.72rem',
+                      fontSize: '0.875rem',
                       color: isActive ? opt.color : 'var(--app-text-muted)',
                       fontWeight: isActive ? 600 : 400,
                     }}
@@ -393,11 +393,11 @@ export const DirectionsPage: React.FC = () => {
                   >
                     {opt.line}
                   </div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--app-text-muted)' }}>{opt.desc}</div>
+                  <div style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)' }}>{opt.desc}</div>
                 </div>
                 <span
                   style={{
-                    fontSize: '0.72rem',
+                    fontSize: '0.875rem',
                     color: 'var(--app-text-soft)',
                     background: 'var(--app-control)',
                     borderRadius: 8,
@@ -437,8 +437,8 @@ export const DirectionsPage: React.FC = () => {
               { label: 'Email', value: 'info@aues.kz' },
             ].map(c => (
               <div key={c.label} className="flex justify-between items-center">
-                <span style={{ fontSize: '0.82rem', color: 'var(--app-text-soft)' }}>{c.label}</span>
-                <span style={{ fontSize: '0.85rem', color: 'var(--app-text)', fontWeight: 500 }}>{c.value}</span>
+                <span style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)' }}>{c.label}</span>
+                <span style={{ fontSize: '0.875rem', color: 'var(--app-text)', fontWeight: 500 }}>{c.value}</span>
               </div>
             ))}
           </div>

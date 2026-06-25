@@ -166,7 +166,7 @@ export const EmployeePage: React.FC = () => {
 
         {/* Employee selector */}
         <div style={{ marginBottom: '1.5rem' }}>
-          <p style={{ fontSize: '0.72rem', color: 'var(--app-text-soft)', fontWeight: 600, marginBottom: '0.75rem', letterSpacing: '0.08em' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)', fontWeight: 600, marginBottom: '0.75rem', letterSpacing: '0.08em' }}>
             СОТРУДНИКИ КАФЕДРЫ
           </p>
           <div
@@ -210,7 +210,7 @@ export const EmployeePage: React.FC = () => {
                 </div>
                 <span
                   style={{
-                    fontSize: '0.7rem',
+                    fontSize: '0.875rem',
                     color: selectedId === e.id ? 'var(--brand-mint-strong)' : 'var(--app-text-muted)',
                     fontWeight: 600,
                     textAlign: 'center',
@@ -287,7 +287,7 @@ export const EmployeePage: React.FC = () => {
               <p style={{ color: 'var(--brand-mint-strong)', fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.5rem' }}>
                 {emp.title}
               </p>
-              <p style={{ color: 'var(--app-text-muted)', fontSize: '0.82rem', marginBottom: '1.25rem' }}>
+              <p style={{ color: 'var(--app-text-muted)', fontSize: '0.875rem', marginBottom: '1.25rem' }}>
                 {emp.department}
               </p>
 
@@ -306,7 +306,7 @@ export const EmployeePage: React.FC = () => {
                         border: `1px solid ${b.border}`,
                         borderRadius: 20,
                         padding: '0.35rem 0.875rem',
-                        fontSize: '0.78rem',
+                        fontSize: '0.875rem',
                         color: b.color,
                       }}
                     >
@@ -326,15 +326,15 @@ export const EmployeePage: React.FC = () => {
                   marginBottom: '1.25rem',
                 }}
               >
-                <p style={{ fontSize: '0.75rem', color: 'var(--app-text-soft)', fontWeight: 600, marginBottom: '0.75rem' }}>
+                <p style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)', fontWeight: 600, marginBottom: '0.75rem' }}>
                   ПРИЁМНЫЕ ЧАСЫ
                 </p>
                 <div className="flex flex-col gap-2">
                   {emp.schedule.map(s => (
                     <div key={s.day} className="flex items-center justify-between">
-                      <span style={{ fontSize: '0.85rem', color: 'var(--app-text)' }}>{s.day}</span>
+                      <span style={{ fontSize: '0.875rem', color: 'var(--app-text)' }}>{s.day}</span>
                       <div className="flex items-center gap-2">
-                        <span style={{ fontSize: '0.82rem', color: 'var(--app-text-muted)' }}>{s.time}</span>
+                        <span style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)' }}>{s.time}</span>
                         <div
                           style={{
                             width: 8,
@@ -419,7 +419,7 @@ export const EmployeePage: React.FC = () => {
             marginBottom: '1.5rem',
           }}
         >
-          <p style={{ fontSize: '0.75rem', color: 'var(--app-text-soft)', fontWeight: 600, marginBottom: '1rem' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)', fontWeight: 600, marginBottom: '1rem' }}>
             ПО КАКИМ ВОПРОСАМ ОБРАЩАТЬСЯ
           </p>
           <div className="flex flex-col gap-2">
@@ -444,7 +444,7 @@ export const EmployeePage: React.FC = () => {
                     flexShrink: 0,
                   }}
                 />
-                <span style={{ fontSize: '0.85rem', color: 'var(--app-text)', lineHeight: 1.5 }}>{issue}</span>
+                <span style={{ fontSize: '0.875rem', color: 'var(--app-text)', lineHeight: 1.5 }}>{issue}</span>
               </div>
             ))}
           </div>

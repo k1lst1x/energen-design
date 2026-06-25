@@ -146,7 +146,7 @@ const ClubDetail: React.FC<ClubDetailProps> = ({ club, onClose, onJoin, isJoined
           <h2 style={{ color: 'var(--app-text-strong)', fontWeight: 800, fontSize: '1.25rem', marginBottom: 8 }}>{club.name}</h2>
           <div className="flex items-center gap-2" style={{ marginBottom: '1rem' }}>
             <Users size={14} style={{ color: club.color }} />
-            <span style={{ fontSize: '0.82rem', color: 'var(--app-text-muted)' }}>{club.members} участников</span>
+            <span style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)' }}>{club.members} участников</span>
           </div>
 
           {/* Tags */}
@@ -159,7 +159,7 @@ const ClubDetail: React.FC<ClubDetailProps> = ({ club, onClose, onJoin, isJoined
                   borderRadius: 20,
                   background: club.bg,
                   border: `1px solid ${club.color}30`,
-                  fontSize: '0.75rem',
+                  fontSize: '0.875rem',
                   color: club.color,
                 }}
               >
@@ -183,9 +183,9 @@ const ClubDetail: React.FC<ClubDetailProps> = ({ club, onClose, onJoin, isJoined
               marginBottom: '1.25rem',
             }}
           >
-            <p style={{ fontSize: '0.72rem', color: 'var(--app-text-soft)', fontWeight: 600, marginBottom: '0.75rem' }}>ДОСТИЖЕНИЯ</p>
+            <p style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)', fontWeight: 600, marginBottom: '0.75rem' }}>ДОСТИЖЕНИЯ</p>
             {club.achievements.map((a, i) => (
-              <p key={i} style={{ fontSize: '0.85rem', color: 'var(--app-text)', marginBottom: 4 }}>{a}</p>
+              <p key={i} style={{ fontSize: '0.875rem', color: 'var(--app-text)', marginBottom: 4 }}>{a}</p>
             ))}
           </div>
 
@@ -209,7 +209,7 @@ const ClubDetail: React.FC<ClubDetailProps> = ({ club, onClose, onJoin, isJoined
                   }}
                 >
                   <Icon size={14} style={{ color: club.color, flexShrink: 0 }} />
-                  <span style={{ fontSize: '0.82rem', color: 'var(--app-text-muted)' }}>{c.value}</span>
+                  <span style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)' }}>{c.value}</span>
                 </div>
               );
             })}
@@ -298,7 +298,7 @@ export const ClubsPage: React.FC = () => {
               <div style={{ fontSize: '1.6rem', fontWeight: 800, color: stat.color, lineHeight: 1 }}>
                 {stat.value}
               </div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--app-text-muted)', marginTop: 4 }}>{stat.label}</div>
+              <div style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)', marginTop: 4 }}>{stat.label}</div>
             </div>
           ))}
         </motion.div>
@@ -364,7 +364,7 @@ export const ClubsPage: React.FC = () => {
                     }}
                   >
                     <Users size={11} style={{ color: club.color }} />
-                    <span style={{ fontSize: '0.72rem', color: 'var(--app-text)' }}>{club.members}</span>
+                    <span style={{ fontSize: '0.875rem', color: 'var(--app-text)' }}>{club.members}</span>
                   </div>
 
                   {isJoined && (
@@ -376,7 +376,7 @@ export const ClubsPage: React.FC = () => {
                         background: 'rgba(127,184,160,0.9)',
                         borderRadius: 20,
                         padding: '0.25rem 0.625rem',
-                        fontSize: '0.68rem',
+                        fontSize: '0.875rem',
                         color: '#0F0F0F',
                         fontWeight: 700,
                       }}
@@ -391,7 +391,7 @@ export const ClubsPage: React.FC = () => {
                   <h3 style={{ color: 'var(--app-text-strong)', fontWeight: 700, fontSize: '0.95rem', lineHeight: 1.35, marginBottom: 6 }}>
                     {club.name}
                   </h3>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--app-text-muted)', lineHeight: 1.5, marginBottom: '0.875rem' }}>
+                  <p style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)', lineHeight: 1.5, marginBottom: '0.875rem' }}>
                     {club.shortDesc}
                   </p>
 
@@ -404,7 +404,7 @@ export const ClubsPage: React.FC = () => {
                           borderRadius: 20,
                           background: club.bg,
                           border: `1px solid ${club.color}25`,
-                          fontSize: '0.7rem',
+                          fontSize: '0.875rem',
                           color: club.color,
                         }}
                       >
@@ -417,7 +417,7 @@ export const ClubsPage: React.FC = () => {
                     className="flex items-center justify-between"
                     style={{ paddingTop: '0.75rem', borderTop: '1px solid var(--app-border)' }}
                   >
-                    <span style={{ fontSize: '0.78rem', color: club.color, fontWeight: 600 }}>
+                    <span style={{ fontSize: '0.875rem', color: club.color, fontWeight: 600 }}>
                       {isJoined ? 'Вы участник' : 'Подробнее'}
                     </span>
                     <ChevronRight size={14} style={{ color: 'var(--app-icon-muted)' }} />

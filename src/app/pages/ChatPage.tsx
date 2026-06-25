@@ -83,13 +83,13 @@ const RoomCardBubble: React.FC<{ card: RoomCardMsg; onNavigate: () => void }> = 
       <div style={{ background: 'var(--app-nav-active)', borderRadius: 8, padding: 6 }}>
         <DoorOpen size={16} style={{ color: 'var(--brand-mint-strong)' }} />
       </div>
-      <span style={{ fontSize: '0.75rem', color: 'var(--brand-mint-strong)', fontWeight: 600 }}>Аудитория</span>
+      <span style={{ fontSize: '0.875rem', color: 'var(--brand-mint-strong)', fontWeight: 600 }}>Аудитория</span>
     </div>
     <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--app-text-strong)', lineHeight: 1, marginBottom: 4 }}>
       {card.room}
     </div>
-    <div style={{ fontSize: '0.82rem', color: 'var(--app-text)', marginBottom: 4 }}>{card.dept}</div>
-    <div className="flex items-center gap-1" style={{ fontSize: '0.78rem', color: 'var(--app-text-muted)', marginBottom: 12 }}>
+    <div style={{ fontSize: '0.875rem', color: 'var(--app-text)', marginBottom: 4 }}>{card.dept}</div>
+    <div className="flex items-center gap-1" style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)', marginBottom: 12 }}>
       <MapPin size={12} /> {card.floor}
     </div>
     <button
@@ -101,7 +101,7 @@ const RoomCardBubble: React.FC<{ card: RoomCardMsg; onNavigate: () => void }> = 
         borderRadius: 10,
         padding: '0.5rem',
         color: 'var(--brand-mint-strong)',
-        fontSize: '0.82rem',
+        fontSize: '0.875rem',
         fontWeight: 600,
         cursor: 'pointer',
         display: 'flex',
@@ -142,11 +142,11 @@ const EmployeeCardBubble: React.FC<{ card: EmployeeCardMsg; onNavigate: () => vo
         <User size={18} style={{ color: '#fff' }} />
       </div>
       <div>
-        <div style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--app-text-strong)' }}>{card.name}</div>
-        <div style={{ fontSize: '0.75rem', color: '#9B7EC8' }}>{card.position}</div>
+        <div style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--app-text-strong)' }}>{card.name}</div>
+        <div style={{ fontSize: '0.875rem', color: '#9B7EC8' }}>{card.position}</div>
       </div>
     </div>
-    <div className="flex items-center gap-1" style={{ fontSize: '0.78rem', color: 'var(--app-text-muted)', marginBottom: 12 }}>
+    <div className="flex items-center gap-1" style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)', marginBottom: 12 }}>
       <MapPin size={12} /> {card.office}
     </div>
     <button
@@ -158,7 +158,7 @@ const EmployeeCardBubble: React.FC<{ card: EmployeeCardMsg; onNavigate: () => vo
         borderRadius: 10,
         padding: '0.5rem',
         color: '#9B7EC8',
-        fontSize: '0.82rem',
+        fontSize: '0.875rem',
         fontWeight: 600,
         cursor: 'pointer',
         display: 'flex',
@@ -318,7 +318,7 @@ export const ChatPage: React.FC = () => {
 
                     <div
                       style={{
-                        fontSize: '0.7rem',
+                        fontSize: '0.875rem',
                         color: 'var(--app-text-soft)',
                         marginTop: 4,
                         textAlign: msg.role === 'user' ? 'right' : 'left',
@@ -385,7 +385,7 @@ export const ChatPage: React.FC = () => {
                 exit={{ opacity: 0 }}
                 style={{ marginTop: '1rem' }}
               >
-                <p style={{ fontSize: '0.75rem', color: 'var(--app-text-soft)', marginBottom: '0.6rem' }}>
+                <p style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)', marginBottom: '0.6rem' }}>
                   Попробуйте спросить:
                 </p>
                 <div className="flex flex-wrap gap-2">
@@ -398,7 +398,7 @@ export const ChatPage: React.FC = () => {
                         border: '1px solid var(--app-border-strong)',
                         borderRadius: 20,
                         padding: '0.45rem 0.875rem',
-                        fontSize: '0.8rem',
+                        fontSize: '0.875rem',
                         color: 'var(--brand-mint-strong)',
                         cursor: 'pointer',
                         transition: 'all 0.2s',

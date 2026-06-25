@@ -50,7 +50,7 @@ export const AppointmentPage: React.FC = () => {
     type?: string;
   }> = ({ label, name, placeholder, type = 'text' }) => (
     <div>
-      <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--app-text-soft)', marginBottom: 6, fontWeight: 600, letterSpacing: '0.04em' }}>
+      <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--app-text-soft)', marginBottom: 6, fontWeight: 600, letterSpacing: '0.04em' }}>
         {label}
       </label>
       <input
@@ -132,8 +132,8 @@ export const AppointmentPage: React.FC = () => {
               { label: 'Тема', value: form.topic || '—' },
             ].map(row => (
               <div key={row.label} className="flex justify-between" style={{ marginBottom: 8 }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--app-text-soft)' }}>{row.label}</span>
-                <span style={{ fontSize: '0.82rem', color: 'var(--app-text)', fontWeight: 600 }}>{row.value}</span>
+                <span style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)' }}>{row.label}</span>
+                <span style={{ fontSize: '0.875rem', color: 'var(--app-text)', fontWeight: 600 }}>{row.value}</span>
               </div>
             ))}
           </motion.div>
@@ -165,7 +165,7 @@ export const AppointmentPage: React.FC = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     color: step >= s.n ? '#0F0F0F' : 'var(--app-text-soft)',
-                    fontSize: '0.8rem',
+                    fontSize: '0.875rem',
                     fontWeight: 700,
                     flexShrink: 0,
                     transition: 'all 0.3s',
@@ -173,7 +173,7 @@ export const AppointmentPage: React.FC = () => {
                 >
                   {step > s.n ? '✓' : s.n}
                 </div>
-                <span style={{ fontSize: '0.78rem', color: step >= s.n ? 'var(--brand-mint-strong)' : 'var(--app-text-muted)', fontWeight: step === s.n ? 600 : 400 }}>
+                <span style={{ fontSize: '0.875rem', color: step >= s.n ? 'var(--brand-mint-strong)' : 'var(--app-text-muted)', fontWeight: step === s.n ? 600 : 400 }}>
                   {s.label}
                 </span>
               </div>
@@ -216,7 +216,7 @@ export const AppointmentPage: React.FC = () => {
               <InputField label="Телефон" name="phone" placeholder="+7 (___) ___-__-__" type="tel" />
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--app-text-soft)', marginBottom: 6, fontWeight: 600, letterSpacing: '0.04em' }}>
+                <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--app-text-soft)', marginBottom: 6, fontWeight: 600, letterSpacing: '0.04em' }}>
                   СТАТУС
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -230,7 +230,7 @@ export const AppointmentPage: React.FC = () => {
                         border: `1px solid ${form.status === s ? 'var(--brand-mint-strong)' : 'var(--app-control-border)'}`,
                         background: form.status === s ? 'var(--app-nav-active)' : 'var(--app-control)',
                         color: form.status === s ? 'var(--brand-mint-strong)' : 'var(--app-text-muted)',
-                        fontSize: '0.82rem',
+                        fontSize: '0.875rem',
                         cursor: 'pointer',
                         transition: 'all 0.2s',
                       }}
@@ -244,7 +244,7 @@ export const AppointmentPage: React.FC = () => {
               <InputField label="ТЕМА" name="topic" placeholder="Консультация по курсовой работе" />
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.78rem', color: 'var(--app-text-soft)', marginBottom: 6, fontWeight: 600, letterSpacing: '0.04em' }}>
+                <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--app-text-soft)', marginBottom: 6, fontWeight: 600, letterSpacing: '0.04em' }}>
                   ОПИСАНИЕ (НЕОБЯЗАТЕЛЬНО)
                 </label>
                 <textarea
@@ -344,7 +344,7 @@ export const AppointmentPage: React.FC = () => {
                 {/* Weekdays */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4, marginBottom: 8 }}>
                   {WEEK_DAYS_RU.map(d => (
-                    <div key={d} style={{ textAlign: 'center', fontSize: '0.7rem', color: 'var(--app-text-soft)', fontWeight: 600, padding: '4px 0' }}>
+                    <div key={d} style={{ textAlign: 'center', fontSize: '0.875rem', color: 'var(--app-text-soft)', fontWeight: 600, padding: '4px 0' }}>
                       {d}
                     </div>
                   ))}
@@ -371,7 +371,7 @@ export const AppointmentPage: React.FC = () => {
                           border: isSelected ? '2px solid var(--brand-mint-strong)' : isToday ? '1px solid var(--app-border-strong)' : '1px solid transparent',
                           background: isSelected ? 'var(--app-nav-active)' : isToday ? 'var(--app-control)' : 'transparent',
                           color: isWeekend || isPast ? 'var(--app-disabled-text)' : isSelected ? 'var(--brand-mint-strong)' : 'var(--app-text)',
-                          fontSize: '0.82rem',
+                          fontSize: '0.875rem',
                           fontWeight: isSelected ? 700 : 400,
                           cursor: isWeekend || isPast ? 'not-allowed' : 'pointer',
                           transition: 'all 0.15s',
@@ -408,7 +408,7 @@ export const AppointmentPage: React.FC = () => {
                     marginBottom: '1rem',
                   }}
                 >
-                  <p style={{ fontSize: '0.8rem', color: 'var(--app-text-soft)', fontWeight: 600, marginBottom: '1rem' }}>
+                  <p style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)', fontWeight: 600, marginBottom: '1rem' }}>
                     ВЫБЕРИТЕ ВРЕМЯ
                   </p>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(80px, 1fr))', gap: 8 }}>
@@ -426,7 +426,7 @@ export const AppointmentPage: React.FC = () => {
                             border: `1px solid ${isSelected ? 'var(--brand-mint-strong)' : isBusy ? 'transparent' : 'var(--app-control-border)'}`,
                             background: isSelected ? 'var(--app-nav-active)' : isBusy ? 'var(--app-disabled-bg)' : 'var(--app-control)',
                             color: isSelected ? 'var(--brand-mint-strong)' : isBusy ? 'var(--app-disabled-text)' : 'var(--app-text)',
-                            fontSize: '0.82rem',
+                            fontSize: '0.875rem',
                             fontWeight: isSelected ? 700 : 400,
                             cursor: isBusy ? 'not-allowed' : 'pointer',
                             transition: 'all 0.15s',
@@ -442,11 +442,11 @@ export const AppointmentPage: React.FC = () => {
                   <div className="flex items-center gap-4" style={{ marginTop: '1rem' }}>
                     <div className="flex items-center gap-1.5">
                       <div style={{ width: 10, height: 10, borderRadius: 3, background: 'var(--app-nav-active)', border: '1px solid var(--brand-mint-strong)' }} />
-                      <span style={{ fontSize: '0.72rem', color: 'var(--app-text-soft)' }}>{t('available')}</span>
+                      <span style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)' }}>{t('available')}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <div style={{ width: 10, height: 10, borderRadius: 3, background: 'var(--app-disabled-bg)', border: '1px solid var(--app-border)' }} />
-                      <span style={{ fontSize: '0.72rem', color: 'var(--app-text-soft)' }}>{t('busy')}</span>
+                      <span style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)' }}>{t('busy')}</span>
                     </div>
                   </div>
                 </motion.div>
@@ -543,11 +543,11 @@ export const AppointmentPage: React.FC = () => {
                     }}
                   >
                     <span style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--brand-mint-strong)', lineHeight: 1 }}>{selectedDate}</span>
-                    <span style={{ fontSize: '0.6rem', color: 'var(--brand-mint-strong)', fontWeight: 600 }}>{MONTH_NAMES_RU[calMonth].slice(0,3).toUpperCase()}</span>
+                    <span style={{ fontSize: '0.875rem', color: 'var(--brand-mint-strong)', fontWeight: 600 }}>{MONTH_NAMES_RU[calMonth].slice(0,3).toUpperCase()}</span>
                   </div>
                   <div>
                     <div style={{ fontWeight: 700, color: 'var(--app-text-strong)', fontSize: '1.05rem' }}>{selectedTime}</div>
-                    <div style={{ color: 'var(--app-text-muted)', fontSize: '0.82rem' }}>Нурланов Б.Е. • Каб. 205</div>
+                    <div style={{ color: 'var(--app-text-muted)', fontSize: '0.875rem' }}>Нурланов Б.Е. • Каб. 205</div>
                   </div>
                 </div>
 
@@ -560,8 +560,8 @@ export const AppointmentPage: React.FC = () => {
                     { label: 'Тема', value: form.topic || '—' },
                   ].map(row => (
                     <div key={row.label} className="flex justify-between items-center">
-                      <span style={{ fontSize: '0.8rem', color: 'var(--app-text-soft)' }}>{row.label}</span>
-                      <span style={{ fontSize: '0.85rem', color: 'var(--app-text)', fontWeight: 500, maxWidth: '60%', textAlign: 'right' }}>{row.value}</span>
+                      <span style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)' }}>{row.label}</span>
+                      <span style={{ fontSize: '0.875rem', color: 'var(--app-text)', fontWeight: 500, maxWidth: '60%', textAlign: 'right' }}>{row.value}</span>
                     </div>
                   ))}
                 </div>

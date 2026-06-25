@@ -11,7 +11,6 @@ interface LanguageContextType {
 const translations: Record<Language, Record<string, string>> = {
   RU: {
     title: 'Energen — ваш цифровой помощник',
-    subtitle: 'Задайте вопрос, найдите аудиторию, узнайте расписание — всё в одном месте.',
     voiceMode: 'Голосовой режим',
     textChat: 'Текстовый чат',
     findRoom: 'Найти аудиторию',
@@ -54,7 +53,6 @@ const translations: Record<Language, Record<string, string>> = {
   },
   KZ: {
     title: 'Energen — сіздің цифрлық көмекшіңіз',
-    subtitle: 'Сұрақ қойыңыз, аудитория табыңыз, кесте біліңіз — бәрі бір жерде.',
     voiceMode: 'Дауыстық режим',
     textChat: 'Мәтіндік чат',
     findRoom: 'Аудитория табу',
@@ -97,7 +95,6 @@ const translations: Record<Language, Record<string, string>> = {
   },
   EN: {
     title: 'Energen — your digital assistant',
-    subtitle: 'Ask a question, find a room, check schedules — everything in one place.',
     voiceMode: 'Voice Mode',
     textChat: 'Text Chat',
     findRoom: 'Find Room',

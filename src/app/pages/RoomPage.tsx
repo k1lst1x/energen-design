@@ -100,7 +100,7 @@ export const RoomPage: React.FC = () => {
                     border: '1px solid var(--app-border-strong)',
                     borderRadius: 20,
                     padding: '0.3rem 0.75rem',
-                    fontSize: '0.8rem',
+                    fontSize: '0.875rem',
                     color: 'var(--brand-mint-strong)',
                   }}
                 >
@@ -115,7 +115,7 @@ export const RoomPage: React.FC = () => {
                     border: '1px solid rgba(155,126,200,0.25)',
                     borderRadius: 20,
                     padding: '0.3rem 0.75rem',
-                    fontSize: '0.8rem',
+                    fontSize: '0.875rem',
                     color: '#9B7EC8',
                   }}
                 >
@@ -130,7 +130,7 @@ export const RoomPage: React.FC = () => {
                     border: '1px solid var(--app-border-strong)',
                     borderRadius: 20,
                     padding: '0.3rem 0.75rem',
-                    fontSize: '0.8rem',
+                    fontSize: '0.875rem',
                     color: 'var(--brand-mint-strong)',
                   }}
                 >
@@ -215,7 +215,7 @@ export const RoomPage: React.FC = () => {
                   >
                     <Icon size={16} style={{ color: 'var(--brand-mint-strong)' }} />
                   </div>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--app-text)' }}>{a.label}</span>
+                  <span style={{ fontSize: '0.875rem', color: 'var(--app-text)' }}>{a.label}</span>
                 </div>
               );
             })}
@@ -236,7 +236,7 @@ export const RoomPage: React.FC = () => {
           }}
         >
           <div style={{ padding: '1rem 1rem 0.75rem', borderBottom: '1px solid var(--app-border)' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--app-text-muted)', fontWeight: 600 }}>Фотогалерея</span>
+            <span style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)', fontWeight: 600 }}>Фотогалерея</span>
           </div>
           {/* Main image */}
           <div style={{ height: 220, overflow: 'hidden' }}>
@@ -314,7 +314,7 @@ export const RoomPage: React.FC = () => {
                     flexShrink: 0,
                   }}
                 />
-                <span style={{ fontSize: '0.85rem', color: 'var(--app-text)', lineHeight: 1.5 }}>{issue}</span>
+                <span style={{ fontSize: '0.875rem', color: 'var(--app-text)', lineHeight: 1.5 }}>{issue}</span>
               </div>
             ))}
           </div>
@@ -372,7 +372,7 @@ export const RoomPage: React.FC = () => {
             >
               <MapPin size={22} style={{ color: 'var(--brand-mint-strong)' }} />
             </div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--app-text-soft)', zIndex: 1 }}>
+            <div style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)', zIndex: 1 }}>
               Корпус A, 3-й этаж, ауд. 301
             </div>
           </div>

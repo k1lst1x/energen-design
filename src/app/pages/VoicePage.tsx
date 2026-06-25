@@ -229,7 +229,7 @@ export const VoicePage: React.FC = () => {
               {response && (
                 <div className="flex items-center gap-2" style={{ marginBottom: 8, justifyContent: 'center' }}>
                   <Volume2 size={14} style={{ color: 'var(--brand-mint-strong)' }} />
-                  <span style={{ fontSize: '0.75rem', color: 'var(--brand-mint-strong)', fontWeight: 600 }}>Energen</span>
+                  <span style={{ fontSize: '0.875rem', color: 'var(--brand-mint-strong)', fontWeight: 600 }}>Energen</span>
                 </div>
               )}
               {transcript || response}
@@ -280,13 +280,13 @@ export const VoicePage: React.FC = () => {
         </motion.button>
 
         {voiceState === 'idle' && (
-          <p style={{ fontSize: '0.78rem', color: 'var(--app-text-soft)', textAlign: 'center' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)', textAlign: 'center' }}>
             {lang === 'EN' ? 'Tap mic to start speaking' : lang === 'KZ' ? 'Сөйлеу үшін микрофонды басыңыз' : 'Нажмите на микрофон, чтобы начать'}
           </p>
         )}
 
         {voiceState === 'listening' && (
-          <p style={{ fontSize: '0.78rem', color: 'var(--app-text-soft)', textAlign: 'center' }}>
+          <p style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)', textAlign: 'center' }}>
             {lang === 'EN' ? 'Tap again to stop' : lang === 'KZ' ? 'Тоқтату үшін қайта басыңыз' : 'Нажмите снова, чтобы остановить'}
           </p>
         )}
@@ -321,7 +321,7 @@ export const VoicePage: React.FC = () => {
               { label: 'Голос', value: 'Energen v1' },
             ].map(item => (
               <div key={item.label}>
-                <div style={{ fontSize: '0.75rem', color: 'var(--app-text-soft)', marginBottom: 4 }}>{item.label}</div>
+                <div style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)', marginBottom: 4 }}>{item.label}</div>
                 <div
                   style={{
                     background: 'var(--app-bg-soft)',

@@ -45,28 +45,16 @@ export const Layout: React.FC<LayoutProps> = ({ children, showBack, title, fulls
           zIndex: 50,
         }}
       >
-        <div className="app-header-shell max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="app-header-shell w-full px-3 sm:px-4">
           <div className="flex items-center justify-between h-16">
-            {/* Left: back or logo */}
+            {/* Left: logo */}
             <div className="flex items-center gap-3">
-              {showBack ? (
-                <button
-                  onClick={() => navigate(-1)}
-                  className="flex items-center gap-2 transition-all duration-200"
-                  style={{ color: 'var(--brand-mint-strong)' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--brand-mint)')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--brand-mint-strong)')}
-                >
-                  <ArrowLeft size={20} />
-                  <span className="hidden sm:inline text-sm">{t('back')}</span>
-                </button>
-              ) : null}
               <Link to="/" className="flex items-center gap-2">
                 <img
                   src={theme === 'light' ? logoBlack : logoMint}
                   alt="Energo University"
                   className="app-logo"
-                  style={{ height: 36, width: 'auto' }}
+                  style={{ height: 61, width: 'auto' }}
                 />
               </Link>
               <button
@@ -86,19 +74,6 @@ export const Layout: React.FC<LayoutProps> = ({ children, showBack, title, fulls
               >
                 {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
               </button>
-              {title && (
-                <span
-                  className="hidden md:inline text-sm"
-                  style={{
-                    color: 'var(--brand-mint-strong)',
-                    borderLeft: '1px solid var(--app-border-strong)',
-                    paddingLeft: 12,
-                    marginLeft: 4,
-                  }}
-                >
-                  {title}
-                </span>
-              )}
             </div>
 
             {/* Right: nav + lang */}
@@ -170,7 +145,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, showBack, title, fulls
                     key={l}
                     onClick={() => setLang(l)}
                     data-active={lang === l}
-                    className="language-button px-2.5 py-1 rounded-md text-xs transition-all duration-200"
+                    className="language-button px-2.5 py-1 rounded-md text-sm transition-all duration-200"
                     style={{
                       background: lang === l ? 'var(--brand-mint)' : 'transparent',
                       color: lang === l ? '#0F0F0F' : 'var(--app-text-muted)',
@@ -227,6 +202,55 @@ export const Layout: React.FC<LayoutProps> = ({ children, showBack, title, fulls
           )}
         </div>
       </header>
+
+      {showBack && (
+        <div
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+          style={{ paddingTop: '1rem' }}
+        >
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              aria-label={t('back')}
+              title={t('back')}
+              className="flex items-center justify-center transition-all duration-200"
+              style={{
+                width: 42,
+                height: 42,
+                borderRadius: '50%',
+                background: 'var(--app-control)',
+                border: '1px solid var(--app-control-border)',
+                color: 'var(--brand-mint-strong)',
+                boxShadow: '0 10px 26px var(--app-shadow)',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.transform = 'translateX(-2px)';
+                e.currentTarget.style.background = 'var(--app-surface-hover)';
+                e.currentTarget.style.borderColor = 'var(--app-border-strong)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.transform = 'translateX(0)';
+                e.currentTarget.style.background = 'var(--app-control)';
+                e.currentTarget.style.borderColor = 'var(--app-control-border)';
+              }}
+            >
+              <ArrowLeft size={21} />
+            </button>
+            {title ? (
+              <span
+                style={{
+                  color: 'var(--brand-mint-strong)',
+                  fontSize: '0.95rem',
+                  fontWeight: 600,
+                }}
+              >
+                {title}
+              </span>
+            ) : null}
+          </div>
+        </div>
+      )}
 
       {/* Main content */}
       <main>{children}</main>

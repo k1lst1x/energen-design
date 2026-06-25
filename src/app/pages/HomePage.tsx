@@ -23,10 +23,6 @@ const quickCards = [
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const [titleLead, titleRest] = t('title').split(' — ');
-  const titleRestWords = titleRest?.split(' ') ?? [];
-  const titleRestMain = titleRestWords.length > 2 ? titleRestWords.slice(0, -1).join(' ') : titleRest;
-  const titleRestTail = titleRestWords.length > 2 ? titleRestWords[titleRestWords.length - 1] : '';
 
   return (
     <Layout>
@@ -71,37 +67,22 @@ export const HomePage: React.FC = () => {
             <h1
               className="home-title"
               style={{
-                fontSize: 'clamp(1.45rem, 6.4vw, 3rem)',
+                fontSize: 'clamp(1.45rem, 2.7vw, 2.35rem)',
                 fontWeight: 700,
                 lineHeight: 1.2,
                 letterSpacing: 0,
-                marginBottom: '1rem',
-                maxWidth: 'min(860px, calc(100vw - 3rem))',
+                margin: '0 auto 1rem',
+                maxWidth: 'min(760px, calc(100vw - 3rem))',
                 width: '100%',
-                overflowWrap: 'anywhere',
-                wordBreak: 'break-word',
+                whiteSpace: 'nowrap',
                 background: 'var(--app-hero-title)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
               }}
             >
-              <span className="home-title-line">{titleLead}</span>
-              {titleRestMain ? <span className="home-title-line"> — {titleRestMain}</span> : null}
-              {titleRestTail ? <span className="home-title-line"> {titleRestTail}</span> : null}
+              {t('title')}
             </h1>
-            <p
-              className="home-subtitle"
-              style={{
-                color: 'var(--app-text-muted)',
-                fontSize: 'clamp(0.9rem, 2vw, 1.1rem)',
-                maxWidth: 'min(520px, 100%)',
-                lineHeight: 1.6,
-                margin: '0 auto 2.5rem',
-              }}
-            >
-              {t('subtitle')}
-            </p>
           </motion.div>
 
           {/* CTA Buttons */}
@@ -109,7 +90,7 @@ export const HomePage: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.5 }}
-            className="flex flex-col sm:flex-row gap-4 items-center"
+            className="flex w-full flex-col sm:flex-row gap-4 items-center justify-center"
           >
             {/* Voice Mode - Primary */}
             <button
@@ -202,7 +183,7 @@ export const HomePage: React.FC = () => {
             className="quick-actions-label"
             style={{
               color: 'var(--app-text-muted)',
-              fontSize: '0.75rem',
+              fontSize: '0.875rem',
               textTransform: 'uppercase',
               letterSpacing: 0,
               marginBottom: '1.25rem',
@@ -269,19 +250,20 @@ export const HomePage: React.FC = () => {
                   {/* Text */}
                   <div
                     style={{
-                      fontSize: '0.95rem',
-                      fontWeight: 600,
+                      fontSize: '1.06rem',
+                      fontWeight: 700,
                       color: 'var(--app-text-strong)',
-                      marginBottom: '0.3rem',
+                      lineHeight: 1.25,
+                      marginBottom: '0.4rem',
                     }}
                   >
                     {t(card.key)}
                   </div>
                   <div
                     style={{
-                      fontSize: '0.78rem',
+                      fontSize: '0.95rem',
                       color: 'var(--app-text-soft)',
-                      lineHeight: 1.4,
+                      lineHeight: 1.45,
                     }}
                   >
                     {t(descKey)}

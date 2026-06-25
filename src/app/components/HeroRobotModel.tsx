@@ -4,6 +4,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import robotModelUrl from '../../assets/robot-toy-3d-model.glb?url';
 
 const FRONT_YAW = -1.2;
+const clamp01 = (value: number) => Math.min(Math.max(value, 0), 1);
 
 export const HeroRobotModel: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -25,23 +26,31 @@ export const HeroRobotModel: React.FC = () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.08;
+    renderer.toneMappingExposure = 1.28;
     renderer.domElement.className = 'home-robot-canvas';
     container.appendChild(renderer.domElement);
 
-    const ambient = new THREE.HemisphereLight(0xf5fff9, 0x272033, 1.75);
+    const ambient = new THREE.HemisphereLight(0xffffff, 0xdceee7, 2.65);
     scene.add(ambient);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.1);
-    keyLight.position.set(3, 4, 5);
+    const frontLight = new THREE.DirectionalLight(0xffffff, 2.35);
+    frontLight.position.set(0, 1.6, 5);
+    scene.add(frontLight);
+
+    const keyLight = new THREE.DirectionalLight(0xfffbf3, 1.45);
+    keyLight.position.set(-3, 4.5, 4);
     scene.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0x87c8aa, 1.45);
-    fillLight.position.set(-4, 2.5, 2);
+    const fillLight = new THREE.DirectionalLight(0xb8efd7, 1.7);
+    fillLight.position.set(4, 2.5, 3);
     scene.add(fillLight);
 
-    const rimLight = new THREE.DirectionalLight(0x8f6fc2, 1.05);
-    rimLight.position.set(0, 2.5, -4);
+    const lowerFill = new THREE.DirectionalLight(0xe9fff6, 0.75);
+    lowerFill.position.set(0, -2, 3);
+    scene.add(lowerFill);
+
+    const rimLight = new THREE.DirectionalLight(0xa7d8ff, 0.45);
+    rimLight.position.set(0, 3, -4);
     scene.add(rimLight);
 
     const loader = new GLTFLoader();
@@ -95,8 +104,9 @@ export const HeroRobotModel: React.FC = () => {
 
         const materials = Array.isArray(child.material) ? child.material : [child.material];
         materials.forEach(material => {
-          if ('roughness' in material) material.roughness = Math.min(material.roughness ?? 0.6, 0.72);
-          if ('metalness' in material) material.metalness = Math.min(material.metalness ?? 0, 0.25);
+          if ('roughness' in material) material.roughness = Math.min(Math.max(material.roughness ?? 0.58, 0.56), 0.82);
+          if ('metalness' in material) material.metalness = Math.min(material.metalness ?? 0, 0.12);
+          material.needsUpdate = true;
         });
       });
 
@@ -111,16 +121,26 @@ export const HeroRobotModel: React.FC = () => {
         const sinceLoaded = elapsed - loadedAt;
         const entrance = Math.min(sinceLoaded / 1.2, 1);
         const entranceEase = 1 - Math.pow(1 - entrance, 3);
-        const idleYaw = Math.sin(elapsed * 0.45) * 0.035;
-        const idlePitch = Math.sin(elapsed * 0.8) * 0.018;
-        const idleRoll = Math.sin(elapsed * 0.65) * 0.025;
+        const greetingProgress = clamp01((sinceLoaded - 0.65) / 2.8);
+        const greetingEnvelope = greetingProgress > 0 && greetingProgress < 1
+          ? Math.sin(greetingProgress * Math.PI)
+          : 0;
+        const greetingTurn = greetingEnvelope * Math.sin(greetingProgress * Math.PI * 2) * 0.16;
+        const greetingNod = greetingEnvelope * 0.075;
+        const greetingRoll = greetingEnvelope * Math.sin(greetingProgress * Math.PI * 1.5) * 0.035;
+        const idleYaw = Math.sin(elapsed * 0.32) * 0.085 + Math.sin(elapsed * 0.67) * 0.025;
+        const idlePitch = Math.sin(elapsed * 0.72) * 0.016;
+        const idleRoll = Math.sin(elapsed * 0.5) * 0.022;
+        const floatY = Math.sin(elapsed * 0.9) * 0.04;
+        const softHop = Math.pow(Math.max(0, Math.sin(elapsed * 1.25 + 0.45)), 2) * 0.026;
+        const breathe = Math.sin(elapsed * 1.15) * 0.011;
 
-        robot.rotation.x = 0.03 + idlePitch;
-        robot.rotation.y = THREE.MathUtils.lerp(-0.55, FRONT_YAW + idleYaw, entranceEase);
-        robot.rotation.z = idleRoll;
-        robot.position.x = Math.sin(elapsed * 0.5) * 0.018;
-        robot.position.y = baseY + Math.sin(elapsed * 0.95) * 0.045;
-        robot.scale.setScalar(baseScale * (1 + Math.sin(elapsed * 1.3) * 0.012));
+        robot.rotation.x = 0.025 + idlePitch + greetingNod;
+        robot.rotation.y = THREE.MathUtils.lerp(-0.55, FRONT_YAW + idleYaw + greetingTurn, entranceEase);
+        robot.rotation.z = idleRoll + greetingRoll;
+        robot.position.x = Math.sin(elapsed * 0.38) * 0.024;
+        robot.position.y = baseY + floatY + softHop + greetingEnvelope * 0.018;
+        robot.scale.setScalar(baseScale * (1 + breathe + softHop * 0.08 + greetingEnvelope * 0.006));
       }
 
       renderer.render(scene, camera);
