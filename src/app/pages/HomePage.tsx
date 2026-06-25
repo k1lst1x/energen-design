@@ -12,10 +12,10 @@ import { useLanguage } from '../context/LanguageContext';
 const quickCards = [
   { key: 'findRoom', icon: DoorOpen, path: '/room', color: '#7FB8A0', bg: 'rgba(127,184,160,0.1)' },
   { key: 'employees', icon: Users, path: '/employee', color: '#9B7EC8', bg: 'rgba(155,126,200,0.1)' },
-  { key: 'administration', icon: Building2, path: '/employee', color: '#E8A87C', bg: 'rgba(232,168,124,0.1)' },
+  { key: 'administration', icon: Building2, path: '/administration', color: '#E8A87C', bg: 'rgba(232,168,124,0.1)' },
   { key: 'events', icon: CalendarDays, path: '/events', color: '#7EC8E3', bg: 'rgba(126,200,227,0.1)' },
   { key: 'clubs', icon: Trophy, path: '/clubs', color: '#E87C9B', bg: 'rgba(232,124,155,0.1)' },
-  { key: 'programs', icon: GraduationCap, path: '/chat', color: '#A8D8A8', bg: 'rgba(168,216,168,0.1)' },
+  { key: 'programs', icon: GraduationCap, path: '/programs', color: '#A8D8A8', bg: 'rgba(168,216,168,0.1)' },
   { key: 'payments', icon: CreditCard, path: '/payments', color: '#F7DC6F', bg: 'rgba(247,220,111,0.1)' },
   { key: 'directions', icon: MapPin, path: '/directions', color: '#7FB8A0', bg: 'rgba(var(--brand-mint-rgb),0.18)' },
 ];

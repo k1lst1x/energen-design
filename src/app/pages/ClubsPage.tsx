@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Users, Mail, Phone, Instagram, X, ChevronRight, Trophy } from 'lucide-react';
+import { Users, Mail, Phone, Instagram, X, ChevronRight, Trophy, Search, Filter } from 'lucide-react';
 import { Layout } from '../components/Layout';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -25,6 +25,7 @@ const clubs = [
       instagram: '@aues_robotics',
     },
     tags: ['Инженерия', 'Программирование', 'Соревнования'],
+    direction: 'engineering',
     achievements: ['🥇 RoboCup 2025 — 1 место в регионе', '🏆 КазРобот 2024 — Гран-при'],
   },
   {
@@ -42,6 +43,7 @@ const clubs = [
       instagram: '@aues_music',
     },
     tags: ['Музыка', 'Концерты', 'Творчество'],
+    direction: 'creative',
     achievements: ['🎤 Лучший студенческий клуб 2025', '🎵 Гала-концерт "Звёзды АЭУС" 2024'],
   },
   {
@@ -59,6 +61,7 @@ const clubs = [
       instagram: '@hackaues',
     },
     tags: ['IT', 'Программирование', 'Стартапы', 'Нетворкинг'],
+    direction: 'engineering',
     achievements: ['💡 Лучший стартап-клуб KZ 2025', '🚀 3 команды в акселератор Q Accelerator'],
   },
   {
@@ -76,8 +79,16 @@ const clubs = [
       instagram: '@aues_volunteers',
     },
     tags: ['Волонтёрство', 'Экология', 'Социальные проекты'],
+    direction: 'volunteer',
     achievements: ['🌱 Eco Award 2025', '❤️ Лучший волонтёрский клуб ВУЗа Алматы'],
   },
+];
+
+const directions = [
+  { key: 'all', label: 'Все' },
+  { key: 'engineering', label: 'Наука и техника' },
+  { key: 'creative', label: 'Творчество' },
+  { key: 'volunteer', label: 'Волонтёрство' },
 ];
 
 interface ClubDetailProps {
@@ -243,6 +254,18 @@ export const ClubsPage: React.FC = () => {
   const { t } = useLanguage();
   const [selectedClub, setSelectedClub] = useState<typeof clubs[0] | null>(null);
   const [joinedIds, setJoinedIds] = useState<Set<number>>(new Set());
+  const [query, setQuery] = useState('');
+  const [activeDirection, setActiveDirection] = useState('all');
+
+  const filteredClubs = clubs.filter(club => {
+    const normalized = query.trim().toLowerCase();
+    const matchesDirection = activeDirection === 'all' || club.direction === activeDirection;
+    const matchesQuery = !normalized || [club.name, club.shortDesc, club.fullDesc, club.tags.join(' ')]
+      .join(' ')
+      .toLowerCase()
+      .includes(normalized);
+    return matchesDirection && matchesQuery;
+  });
 
   const handleJoin = () => {
     if (selectedClub) {
@@ -266,6 +289,62 @@ export const ClubsPage: React.FC = () => {
           <p style={{ color: 'var(--app-text-muted)', fontSize: '0.9rem' }}>
             Найди своё сообщество, развивай таланты и заводи знакомства
           </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.08 }}
+          className="flex items-center gap-2"
+          style={{
+            background: 'var(--app-card)',
+            border: '1px solid var(--app-border)',
+            borderRadius: 14,
+            padding: '0.8rem 1rem',
+            marginBottom: '1rem',
+          }}
+        >
+          <Search size={18} style={{ color: 'var(--app-icon-muted)' }} />
+          <input
+            value={query}
+            onChange={event => setQuery(event.target.value)}
+            placeholder="Поиск клуба по названию или направлению"
+            style={{
+              flex: 1,
+              background: 'transparent',
+              border: 0,
+              outline: 'none',
+              color: 'var(--app-text)',
+              fontSize: '0.95rem',
+            }}
+          />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12 }}
+          className="flex items-center gap-2 flex-wrap"
+          style={{ marginBottom: '1.5rem' }}
+        >
+          <Filter size={16} style={{ color: 'var(--app-icon-muted)' }} />
+          {directions.map(direction => (
+            <button
+              key={direction.key}
+              type="button"
+              onClick={() => setActiveDirection(direction.key)}
+              style={{
+                padding: '0.45rem 0.875rem',
+                borderRadius: 999,
+                border: `1px solid ${activeDirection === direction.key ? 'var(--brand-mint-strong)' : 'var(--app-control-border)'}`,
+                background: activeDirection === direction.key ? 'var(--app-nav-active)' : 'var(--app-control)',
+                color: activeDirection === direction.key ? 'var(--brand-mint-strong)' : 'var(--app-text-muted)',
+                fontWeight: activeDirection === direction.key ? 700 : 500,
+              }}
+            >
+              {direction.label}
+            </button>
+          ))}
         </motion.div>
 
         {/* Stats */}
@@ -311,7 +390,7 @@ export const ClubsPage: React.FC = () => {
             gap: '1rem',
           }}
         >
-          {clubs.map((club, idx) => {
+          {filteredClubs.map((club, idx) => {
             const isJoined = joinedIds.has(club.id);
             return (
               <motion.div

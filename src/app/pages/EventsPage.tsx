@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { CalendarDays, MapPin, Users, Filter, ExternalLink, Bell, ChevronRight } from 'lucide-react';
+import { CalendarDays, MapPin, Users, Filter, Search, ExternalLink, Bell, ChevronRight } from 'lucide-react';
 import { Layout } from '../components/Layout';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -17,6 +17,7 @@ const events = [
     dateShort: { day: '15', month: 'АПР' },
     location: 'Главный актовый зал, Корпус A',
     type: 'conference',
+    period: 'month',
     typeLabel: 'Конференция',
     capacity: 250,
     registered: 178,
@@ -31,6 +32,7 @@ const events = [
     dateShort: { day: '22', month: 'АПР' },
     location: 'Компьютерный центр, Корпус B',
     type: 'hackathon',
+    period: 'week',
     typeLabel: 'Хакатон',
     capacity: 120,
     registered: 98,
@@ -45,6 +47,7 @@ const events = [
     dateShort: { day: '3', month: 'МАЙ' },
     location: 'Главный корпус',
     type: 'open-day',
+    period: 'month',
     typeLabel: 'Открытый день',
     capacity: 500,
     registered: 312,
@@ -59,6 +62,7 @@ const events = [
     dateShort: { day: '10', month: 'МАЙ' },
     location: 'Студенческий центр',
     type: 'festival',
+    period: 'past',
     typeLabel: 'Фестиваль',
     capacity: 400,
     registered: 201,
@@ -76,12 +80,30 @@ const filterTypes = [
   { key: 'festival', label: 'Фестивали' },
 ];
 
+const dateFilters = [
+  { key: 'all', label: 'Все даты' },
+  { key: 'week', label: 'Эта неделя' },
+  { key: 'month', label: 'Этот месяц' },
+  { key: 'past', label: 'Архив' },
+];
+
 export const EventsPage: React.FC = () => {
   const { t } = useLanguage();
   const [activeFilter, setActiveFilter] = useState('all');
+  const [activeDate, setActiveDate] = useState('all');
+  const [query, setQuery] = useState('');
   const [registeredIds, setRegisteredIds] = useState<Set<number>>(new Set());
 
-  const filtered = activeFilter === 'all' ? events : events.filter(e => e.type === activeFilter);
+  const filtered = events.filter(e => {
+    const normalized = query.trim().toLowerCase();
+    const matchesType = activeFilter === 'all' || e.type === activeFilter;
+    const matchesDate = activeDate === 'all' || e.period === activeDate;
+    const matchesQuery = !normalized || [e.title, e.description, e.location, e.typeLabel]
+      .join(' ')
+      .toLowerCase()
+      .includes(normalized);
+    return matchesType && matchesDate && matchesQuery;
+  });
 
   const handleRegister = (id: number) => {
     setRegisteredIds(prev => {
@@ -109,6 +131,35 @@ export const EventsPage: React.FC = () => {
           </p>
         </motion.div>
 
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="flex items-center gap-2"
+          style={{
+            background: 'var(--app-card)',
+            border: '1px solid var(--app-border)',
+            borderRadius: 14,
+            padding: '0.8rem 1rem',
+            marginBottom: '1rem',
+          }}
+        >
+          <Search size={18} style={{ color: 'var(--app-icon-muted)' }} />
+          <input
+            value={query}
+            onChange={event => setQuery(event.target.value)}
+            placeholder="Поиск по названию, месту или организатору"
+            style={{
+              flex: 1,
+              background: 'transparent',
+              border: 0,
+              outline: 'none',
+              color: 'var(--app-text)',
+              fontSize: '0.95rem',
+            }}
+          />
+        </motion.div>
+
         {/* Filters */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -118,6 +169,26 @@ export const EventsPage: React.FC = () => {
           style={{ marginBottom: '1.5rem' }}
         >
           <Filter size={14} style={{ color: 'var(--app-icon-muted)', flexShrink: 0 }} />
+          {dateFilters.map(f => (
+            <button
+              key={f.key}
+              onClick={() => setActiveDate(f.key)}
+              style={{
+                padding: '0.4rem 0.875rem',
+                borderRadius: 20,
+                border: `1px solid ${activeDate === f.key ? 'var(--brand-mint-strong)' : 'var(--app-control-border)'}`,
+                background: activeDate === f.key ? 'var(--app-nav-active)' : 'var(--app-control)',
+                color: activeDate === f.key ? 'var(--brand-mint-strong)' : 'var(--app-text-muted)',
+                fontSize: '0.875rem',
+                fontWeight: activeDate === f.key ? 600 : 400,
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+              }}
+            >
+              {f.label}
+            </button>
+          ))}
+          <span style={{ width: 1, height: 24, background: 'var(--app-border)', margin: '0 0.25rem' }} />
           {filterTypes.map(f => (
             <button
               key={f.key}
