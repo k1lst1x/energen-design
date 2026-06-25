@@ -105,15 +105,56 @@ body {
 
 .home-hero-stage {
   position: relative;
-  min-height: 50rem;
-  margin-bottom: 1rem;
+  min-height: max(54rem, calc(100vh - 5rem));
+  margin-bottom: 2rem;
 }
 
 .home-hero-center {
   position: relative;
   z-index: 2;
-  max-width: 720px;
+  max-width: min(920px, 100%);
   margin: 0 auto;
+}
+
+.home-robot-shell {
+  position: relative;
+  width: 100%;
+  height: clamp(27rem, 60vh, 39rem);
+  margin-top: clamp(-1.25rem, -2vh, -0.5rem);
+  margin-bottom: clamp(0.5rem, 1vh, 1rem);
+  pointer-events: none;
+}
+
+.home-robot-stage {
+  position: relative;
+  width: min(100%, 52rem);
+  height: 100%;
+  margin: 0 auto;
+  isolation: isolate;
+}
+
+.home-robot-stage::before {
+  content: '';
+  position: absolute;
+  inset: 7% 8% 1%;
+  z-index: -1;
+  border-radius: 999px;
+  background:
+    radial-gradient(ellipse at center, rgba(var(--brand-mint-rgb), 0.2) 0%, rgba(var(--brand-purple-rgb), 0.08) 40%, transparent 72%);
+  filter: blur(22px);
+  opacity: 0.75;
+}
+
+.home-robot-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.home-hero-copy {
+  position: relative;
+  z-index: 3;
+  width: 100%;
 }
 
 .home-floating-actions {
@@ -183,6 +224,12 @@ body {
   .home-hero-stage {
     min-height: auto;
     margin-bottom: 3rem;
+  }
+
+  .home-robot-shell {
+    height: clamp(22rem, 50vh, 31rem);
+    margin-top: -1rem;
+    margin-bottom: 0.5rem;
   }
 
   .home-floating-actions {
@@ -257,6 +304,18 @@ body {
     max-width: calc(100vw - 2rem) !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
+  }
+
+  .home-robot-shell {
+    height: clamp(19rem, 48vh, 25rem);
+    margin-top: -0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .home-robot-stage {
+    width: min(118vw, 27rem);
+    margin-left: 50%;
+    transform: translateX(-50%);
   }
 
   .home-title {

@@ -6,7 +6,7 @@ import {
   Trophy, GraduationCap, CreditCard, MapPin, ChevronRight
 } from 'lucide-react';
 import { Layout } from '../components/Layout';
-import { AIAvatar } from '../components/AIAvatar';
+import { HeroRobotModel } from '../components/HeroRobotModel';
 import { useLanguage } from '../context/LanguageContext';
 
 const quickCards = [
@@ -51,17 +51,17 @@ export const HomePage: React.FC = () => {
           />
 
           <div className="home-hero-center flex flex-col items-center text-center">
-
-          {/* AI Avatar */}
+          {/* 3D Model */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, ease: 'easeOut' }}
-            style={{ marginBottom: '2rem' }}
+            className="home-robot-shell"
           >
-            <AIAvatar size={220} state="idle" />
+            <HeroRobotModel />
           </motion.div>
 
+          <div className="home-hero-copy">
           {/* Title */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -193,6 +193,7 @@ export const HomePage: React.FC = () => {
               {t('textChat')}
             </button>
           </motion.div>
+          </div>
         </div>
 
         {/* Quick Action Cards */}
