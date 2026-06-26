@@ -116,7 +116,7 @@ export const EventsPage: React.FC = () => {
 
   return (
     <Layout title="Мероприятия" showBack>
-      <div className="max-w-4xl mx-auto px-4 sm:px-6" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+      <div className="page-content max-w-4xl mx-auto px-4 sm:px-6" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -99,6 +99,17 @@ body {
   transition: background-color 0.25s ease, color 0.25s ease;
 }
 
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.page-content {
+  width: 100%;
+}
+
 .home-container {
   max-width: min(100vw, 1920px) !important;
 }
@@ -158,6 +169,25 @@ body {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.home-robot-fallback-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.home-robot-fallback {
+  width: min(46%, 18rem);
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(var(--brand-mint-rgb), 0.42);
+  border-radius: 50%;
+  color: var(--brand-mint-strong);
+  background: radial-gradient(circle at 35% 30%, rgba(var(--brand-mint-rgb), 0.28), rgba(var(--brand-purple-rgb), 0.16) 58%, transparent 72%);
+  box-shadow: 0 0 80px rgba(var(--brand-mint-rgb), 0.23), inset 0 0 42px rgba(var(--brand-mint-rgb), 0.12);
 }
 
 .home-hero-copy {
@@ -266,7 +296,7 @@ body {
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 767px) {
   html,
   body,
   #root {
@@ -274,22 +304,24 @@ body {
     overflow-x: hidden;
   }
 
+  body {
+    -webkit-tap-highlight-color: transparent;
+  }
+
   .app-header-shell {
-    padding-left: 0.75rem !important;
-    padding-right: 0.75rem !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
   }
 
   .app-logo {
-    height: 51px !important;
-    max-width: 190px;
+    height: 46px !important;
+    max-width: 145px;
     object-fit: contain;
   }
 
   .app-actions {
-    position: absolute;
-    right: 0.75rem;
-    top: 1rem;
-    gap: 0.4rem !important;
+    position: static;
+    gap: 0.5rem !important;
     min-width: 0;
   }
 
@@ -299,6 +331,9 @@ body {
 
   .mobile-theme-toggle {
     display: flex !important;
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 0.625rem !important;
   }
 
   [data-theme-control='language'] {
@@ -306,7 +341,156 @@ body {
   }
 
   .mobile-menu-button {
-    display: none !important;
+    display: flex !important;
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--app-control-border);
+    background: var(--app-control);
+  }
+
+  .mobile-navigation {
+    margin-left: -0.25rem;
+    margin-right: -0.25rem;
+  }
+
+  .mobile-navigation a {
+    min-height: 44px;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .mobile-language-picker {
+    position: relative;
+  }
+
+  .mobile-language-trigger {
+    display: flex;
+    min-width: 58px;
+    height: 38px;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    border: 1px solid var(--app-control-border);
+    border-radius: 0.625rem;
+    background: var(--app-control);
+    color: var(--app-text-muted);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .mobile-language-trigger svg {
+    transition: transform 0.2s ease;
+  }
+
+  .mobile-language-chevron-open {
+    transform: rotate(180deg);
+  }
+
+  .mobile-language-options {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    z-index: 60;
+    display: grid;
+    gap: 0.25rem;
+    min-width: 74px;
+    padding: 0.3rem;
+    border: 1px solid var(--app-control-border);
+    border-radius: 0.75rem;
+    background: var(--app-surface);
+    box-shadow: 0 14px 30px var(--app-shadow);
+  }
+
+  .mobile-language-option {
+    min-height: 34px;
+    border: 0;
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
+    cursor: pointer;
+  }
+
+  .mobile-actions-menu {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .mobile-action-link {
+    display: flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid var(--app-border);
+    border-radius: 0.75rem;
+    background: var(--app-card);
+    color: var(--app-text-muted);
+    font-size: 0.875rem;
+    font-weight: 650;
+    text-decoration: none;
+  }
+
+  .mobile-action-link svg {
+    flex-shrink: 0;
+    color: var(--brand-mint-strong);
+  }
+
+  .page-back-wrap {
+    padding: 0.75rem 1rem 0 !important;
+  }
+
+  .page-back-row {
+    gap: 0.625rem !important;
+  }
+
+  .page-back-row > button {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .page-back-row > span {
+    font-size: 0.9rem !important;
+  }
+
+  .page-content {
+    padding: 1.25rem 1rem 3rem !important;
+  }
+
+  .page-content h1 {
+    font-size: clamp(1.55rem, 7.5vw, 1.9rem) !important;
+    line-height: 1.15 !important;
+  }
+
+  .page-content h2 {
+    font-size: clamp(1.35rem, 6.5vw, 1.65rem) !important;
+  }
+
+  .page-content input,
+  .page-content textarea,
+  .page-content select {
+    font-size: 16px !important;
+  }
+
+  .directory-results {
+    max-height: 18rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-right: 0.25rem;
+  }
+
+  .directory-detail {
+    border-radius: 18px !important;
+  }
+
+  .directory-detail .detail-content {
+    padding: 1rem !important;
+  }
+
+  .directory-detail.detail-content {
+    padding: 1rem !important;
   }
 
   .home-container {
@@ -316,9 +500,9 @@ body {
   }
 
   .home-robot-shell {
-    height: clamp(19rem, 48vh, 25rem);
-    margin-top: -0.75rem;
-    margin-bottom: 0.75rem;
+    height: clamp(18rem, 44vh, 23rem);
+    margin-top: -1rem;
+    margin-bottom: 0.5rem;
   }
 
   .home-robot-stage {
@@ -329,10 +513,11 @@ body {
 
   .home-title {
     max-width: calc(100vw - 2rem) !important;
-    font-size: 1.45rem !important;
+    font-size: clamp(1.55rem, 7.2vw, 1.85rem) !important;
+    line-height: 1.15 !important;
     white-space: normal !important;
-    overflow-wrap: anywhere !important;
-    word-break: break-word !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
   }
 
   .home-subtitle {
@@ -343,5 +528,108 @@ body {
 
   .home-floating-actions .quick-actions-grid {
     grid-template-columns: 1fr !important;
+  }
+
+  .hero-action-card {
+    min-height: 7.5rem !important;
+    padding: 1rem !important;
+  }
+
+  .hero-action-card > div:first-child {
+    width: 40px !important;
+    height: 40px !important;
+    margin-bottom: 0.625rem !important;
+  }
+
+  .home-mode-actions {
+    gap: 0.75rem !important;
+  }
+
+  .home-mode-button {
+    width: min(100%, 22rem);
+    min-height: 58px;
+    justify-content: center;
+    padding: 0.75rem 1rem !important;
+  }
+
+  .home-floating-actions {
+    display: none !important;
+  }
+
+  .chat-shell {
+    height: calc(100dvh - 116px) !important;
+  }
+
+  .chat-messages {
+    padding: 1rem !important;
+    padding-bottom: 6.5rem !important;
+  }
+
+  .chat-bubble {
+    max-width: calc(100vw - 5rem) !important;
+  }
+
+  .chat-composer {
+    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom)) !important;
+  }
+
+  .chat-composer-inner {
+    gap: 0.625rem !important;
+  }
+
+  .chat-composer button {
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  .voice-page {
+    justify-content: flex-start !important;
+    min-height: 100dvh !important;
+    padding: 6.5rem 1rem 1.5rem !important;
+    overflow-y: auto !important;
+  }
+
+  .voice-topbar {
+    padding: 1rem !important;
+  }
+
+  .voice-main {
+    width: 100%;
+    gap: 1.25rem !important;
+  }
+
+  .voice-page .ai-avatar {
+    transform: scale(0.76);
+    transform-origin: center;
+    margin-top: -2rem;
+    margin-bottom: -2rem;
+  }
+
+  .voice-transcript {
+    width: 100%;
+    max-width: 100% !important;
+    padding: 0.875rem 1rem !important;
+  }
+
+  .voice-settings {
+    width: min(86vw, 20rem) !important;
+    padding: 4.75rem 1rem 1rem !important;
+  }
+}
+
+@media (min-width: 440px) and (max-width: 640px) {
+  .home-floating-actions .quick-actions-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

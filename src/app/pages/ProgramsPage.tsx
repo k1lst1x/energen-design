@@ -105,7 +105,7 @@ export const ProgramsPage: React.FC = () => {
 
   return (
     <Layout title="Образовательные программы" showBack>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+      <div className="page-content max-w-6xl mx-auto px-4 sm:px-6" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: '1.5rem' }}>
           <h1 style={{ color: 'var(--app-text-strong)', fontWeight: 800, fontSize: '1.9rem', marginBottom: 8 }}>
             Специальности и образовательные программы
@@ -165,7 +165,7 @@ export const ProgramsPage: React.FC = () => {
               ))}
             </div>
 
-            <div className="flex flex-col gap-3">
+            <div className="directory-results flex flex-col gap-3">
               {filtered.map(program => (
                 <button
                   key={program.id}
@@ -200,6 +200,7 @@ export const ProgramsPage: React.FC = () => {
           </div>
 
           <motion.section
+            className="directory-detail detail-content"
             key={selected.id}
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}

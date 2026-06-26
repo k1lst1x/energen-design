@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { Bot } from 'lucide-react';
 import robotModelUrl from '../../assets/robot-toy-3d-model.glb?url';
 
 const FRONT_YAW = -1.2;
@@ -8,20 +9,27 @@ const clamp01 = (value: number) => Math.min(Math.max(value, 0), 1);
 
 export const HeroRobotModel: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [webglUnavailable, setWebglUnavailable] = useState(false);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance',
+      });
+    } catch {
+      setWebglUnavailable(true);
+      return;
+    }
+
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 100);
     camera.position.set(0, 0.08, 6.8);
-
-    const renderer = new THREE.WebGLRenderer({
-      alpha: true,
-      antialias: true,
-      powerPreference: 'high-performance',
-    });
     renderer.setClearColor(0x000000, 0);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -91,28 +99,35 @@ export const HeroRobotModel: React.FC = () => {
       model.rotation.set(0.03, FRONT_YAW, 0);
     };
 
-    loader.load(robotModelUrl, gltf => {
-      if (disposed) return;
+    loader.load(
+      robotModelUrl,
+      gltf => {
+        if (disposed) return;
 
-      robot = gltf.scene;
-      loadedAt = clock.getElapsedTime();
-      robot.traverse(child => {
-        if (!(child instanceof THREE.Mesh)) return;
+        robot = gltf.scene;
+        loadedAt = clock.getElapsedTime();
+        robot.traverse(child => {
+          if (!(child instanceof THREE.Mesh)) return;
 
-        child.castShadow = false;
-        child.receiveShadow = false;
+          child.castShadow = false;
+          child.receiveShadow = false;
 
-        const materials = Array.isArray(child.material) ? child.material : [child.material];
-        materials.forEach(material => {
-          if ('roughness' in material) material.roughness = Math.min(Math.max(material.roughness ?? 0.58, 0.56), 0.82);
-          if ('metalness' in material) material.metalness = Math.min(material.metalness ?? 0, 0.12);
-          material.needsUpdate = true;
+          const materials = Array.isArray(child.material) ? child.material : [child.material];
+          materials.forEach(material => {
+            if ('roughness' in material) material.roughness = Math.min(Math.max(material.roughness ?? 0.58, 0.56), 0.82);
+            if ('metalness' in material) material.metalness = Math.min(material.metalness ?? 0, 0.12);
+            material.needsUpdate = true;
+          });
         });
-      });
 
-      fitRobotToScene(robot);
-      scene.add(robot);
-    });
+        fitRobotToScene(robot);
+        scene.add(robot);
+      },
+      undefined,
+      () => {
+        if (!disposed) setWebglUnavailable(true);
+      },
+    );
 
     const animate = () => {
       const elapsed = clock.getElapsedTime();
@@ -168,5 +183,13 @@ export const HeroRobotModel: React.FC = () => {
     };
   }, []);
 
-  return <div ref={containerRef} className="home-robot-stage" aria-hidden="true" />;
+  return (
+    <div ref={containerRef} className={`home-robot-stage${webglUnavailable ? ' home-robot-fallback-stage' : ''}`} aria-hidden="true">
+      {webglUnavailable && (
+        <div className="home-robot-fallback">
+          <Bot size="42%" strokeWidth={1.45} />
+        </div>
+      )}
+    </div>
+  );
 };

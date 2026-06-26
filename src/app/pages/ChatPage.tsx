@@ -223,6 +223,7 @@ export const ChatPage: React.FC = () => {
   return (
     <Layout title="Чат с Energen" showBack>
       <div
+        className="chat-shell"
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -233,6 +234,7 @@ export const ChatPage: React.FC = () => {
       >
         {/* Messages */}
         <div
+          className="chat-messages"
           style={{
             flex: 1,
             overflowY: 'auto',
@@ -275,7 +277,7 @@ export const ChatPage: React.FC = () => {
                     </div>
                   )}
 
-                  <div style={{ maxWidth: '75%' }}>
+                  <div className="chat-bubble" style={{ maxWidth: '75%' }}>
                     {msg.text && (
                       <div
                         style={{
@@ -423,6 +425,7 @@ export const ChatPage: React.FC = () => {
 
         {/* Input bar */}
         <div
+          className="chat-composer"
           style={{
             position: 'fixed',
             bottom: 0,
@@ -435,7 +438,7 @@ export const ChatPage: React.FC = () => {
             zIndex: 40,
           }}
         >
-          <div className="max-w-2xl mx-auto flex items-center gap-3">
+          <div className="chat-composer-inner max-w-2xl mx-auto flex items-center gap-3">
             <button
               onClick={() => navigate('/voice')}
               style={{

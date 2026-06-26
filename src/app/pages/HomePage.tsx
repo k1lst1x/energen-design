@@ -85,17 +85,16 @@ export const HomePage: React.FC = () => {
             </h1>
           </motion.div>
 
-          {/* CTA Buttons */}
+          {/* Mode selection */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.5 }}
-            className="flex w-full flex-col sm:flex-row gap-4 items-center justify-center"
+            className="home-mode-actions flex w-full flex-col sm:flex-row gap-4 items-center justify-center"
           >
-            {/* Voice Mode - Primary */}
             <button
               onClick={() => navigate('/voice')}
-              className="group flex items-center gap-3 transition-all duration-300"
+              className="home-mode-button group flex items-center gap-3 transition-all duration-300"
               style={{
                 background: 'linear-gradient(135deg, var(--brand-mint), var(--brand-mint-strong))',
                 color: '#0F0F0F',
@@ -133,10 +132,9 @@ export const HomePage: React.FC = () => {
               {t('voiceMode')}
             </button>
 
-            {/* Text Chat - Secondary */}
             <button
               onClick={() => navigate('/chat')}
-              className="group flex items-center gap-3 transition-all duration-300"
+              className="home-mode-button group flex items-center gap-3 transition-all duration-300"
               style={{
                 background: 'linear-gradient(135deg, var(--brand-mint), var(--brand-mint-strong))',
                 color: '#0F0F0F',

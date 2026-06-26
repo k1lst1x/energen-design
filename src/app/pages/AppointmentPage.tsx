@@ -80,7 +80,7 @@ export const AppointmentPage: React.FC = () => {
     return (
       <Layout title="Запись подтверждена" showBack>
         <div
-          className="max-w-md mx-auto px-4 flex flex-col items-center justify-center"
+          className="page-content max-w-md mx-auto px-4 flex flex-col items-center justify-center"
           style={{ minHeight: 'calc(100vh - 120px)', textAlign: 'center', gap: '1.5rem' }}
         >
           <motion.div
@@ -144,7 +144,7 @@ export const AppointmentPage: React.FC = () => {
 
   return (
     <Layout title="Запись на приём" showBack>
-      <div className="max-w-xl mx-auto px-4 sm:px-6" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+      <div className="page-content max-w-xl mx-auto px-4 sm:px-6" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
         {/* Steps indicator */}
         <div className="flex items-center gap-3" style={{ marginBottom: '2rem' }}>
           {[

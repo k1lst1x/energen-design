@@ -204,7 +204,7 @@ export const EmployeePage: React.FC = () => {
 
   return (
     <Layout title="Сотрудники" showBack>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+      <div className="page-content max-w-6xl mx-auto px-4 sm:px-6" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: '1.5rem' }}>
           <h1 style={{ color: 'var(--app-text-strong)', fontWeight: 850, fontSize: '1.9rem', marginBottom: 8 }}>
             Сотрудники и преподаватели
@@ -264,7 +264,7 @@ export const EmployeePage: React.FC = () => {
               ))}
             </div>
 
-            <div className="flex flex-col gap-3">
+            <div className="directory-results flex flex-col gap-3">
               {filteredStaff.length ? filteredStaff.map(member => {
                 const Icon = categoryIcons[member.category];
                 const memberPresenceColor = presenceColors[member.presence] ?? member.color;
@@ -314,6 +314,7 @@ export const EmployeePage: React.FC = () => {
           </aside>
 
           <motion.section
+            className="directory-detail"
             key={selected.id}
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
@@ -335,7 +336,7 @@ export const EmployeePage: React.FC = () => {
               }}
             />
 
-            <div style={{ padding: '0 1.5rem 1.5rem' }}>
+            <div className="detail-content" style={{ padding: '0 1.5rem 1.5rem' }}>
               <div className="flex items-end justify-between gap-4 flex-wrap" style={{ marginTop: -52, marginBottom: '1.25rem' }}>
                 <div className="flex items-end gap-4">
                   <img

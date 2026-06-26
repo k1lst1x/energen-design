@@ -70,7 +70,7 @@ export const AdministrationPage: React.FC = () => {
 
   return (
     <Layout title="АУП и запись к руководству" showBack>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+      <div className="page-content max-w-6xl mx-auto px-4 sm:px-6" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: '1.5rem' }}>
           <h1 style={{ color: 'var(--app-text-strong)', fontWeight: 850, fontSize: '1.9rem', marginBottom: 8 }}>
             Руководство и онлайн-запись
@@ -81,7 +81,7 @@ export const AdministrationPage: React.FC = () => {
         </motion.div>
 
         <div className="grid lg:grid-cols-[360px_1fr] gap-5">
-          <div className="flex flex-col gap-3">
+          <div className="directory-results flex flex-col gap-3">
             {leaders.map(leader => (
               <button
                 key={leader.id}
@@ -122,6 +122,7 @@ export const AdministrationPage: React.FC = () => {
           </div>
 
           <section
+            className="directory-detail detail-content"
             style={{
               background: 'var(--app-card)',
               border: '1px solid var(--app-border)',

@@ -88,6 +88,7 @@ export const VoicePage: React.FC = () => {
 
   return (
     <div
+      className="voice-page"
       style={{
         minHeight: '100vh',
         background: 'var(--app-bg)',
@@ -118,6 +119,7 @@ export const VoicePage: React.FC = () => {
 
       {/* Top bar */}
       <div
+        className="voice-topbar"
         style={{
           position: 'absolute',
           top: 0,
@@ -179,7 +181,7 @@ export const VoicePage: React.FC = () => {
       </div>
 
       {/* Main content */}
-      <div className="flex flex-col items-center" style={{ gap: '2rem' }}>
+      <div className="voice-main flex flex-col items-center" style={{ gap: '2rem' }}>
         {/* Avatar */}
         <AIAvatar size={280} state={voiceState} />
 
@@ -208,6 +210,7 @@ export const VoicePage: React.FC = () => {
         <AnimatePresence mode="wait">
           {(transcript || response) && (
             <motion.div
+              className="voice-transcript"
               key={transcript || response}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -296,6 +299,7 @@ export const VoicePage: React.FC = () => {
       <AnimatePresence>
         {showSettings && (
           <motion.div
+            className="voice-settings"
             initial={{ x: 300, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: 300, opacity: 0 }}

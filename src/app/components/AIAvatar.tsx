@@ -26,6 +26,7 @@ export const AIAvatar: React.FC<AIAvatarProps> = ({ size = 200, state = 'idle', 
 
   return (
     <div
+      className="ai-avatar"
       style={{
         width: s,
         height: s,

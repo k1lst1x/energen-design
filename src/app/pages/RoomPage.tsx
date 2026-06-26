@@ -213,7 +213,7 @@ export const RoomPage: React.FC = () => {
 
   return (
     <Layout title="Найти аудиторию" showBack>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+      <div className="page-content max-w-6xl mx-auto px-4 sm:px-6" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: '1.5rem' }}>
           <h1 style={{ color: 'var(--app-text-strong)', fontWeight: 850, fontSize: '1.9rem', marginBottom: 8 }}>
             Найти аудиторию или отдел
@@ -273,7 +273,7 @@ export const RoomPage: React.FC = () => {
               ))}
             </div>
 
-            <div className="flex flex-col gap-3">
+            <div className="directory-results flex flex-col gap-3">
               {filteredRooms.length ? filteredRooms.map(room => (
                 <button
                   key={room.id}
@@ -312,6 +312,7 @@ export const RoomPage: React.FC = () => {
           </aside>
 
           <motion.section
+            className="directory-detail"
             key={selected.id}
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
@@ -324,7 +325,7 @@ export const RoomPage: React.FC = () => {
               boxShadow: '0 18px 46px var(--app-shadow)',
             }}
           >
-            <div style={{ padding: '1.5rem' }}>
+            <div className="detail-content" style={{ padding: '1.5rem' }}>
               <div className="flex items-start justify-between gap-4 flex-wrap" style={{ marginBottom: '1.25rem' }}>
                 <div>
                   <div style={{ color: selected.color, fontWeight: 900, fontSize: '0.95rem', marginBottom: 8 }}>
