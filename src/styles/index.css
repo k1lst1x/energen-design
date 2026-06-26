@@ -635,6 +635,10 @@ select {
   width: min(100%, 110rem);
 }
 
+.events-page {
+  width: min(100%, 110rem);
+}
+
 .employee-workspace {
   align-items: start;
 }

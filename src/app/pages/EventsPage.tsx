@@ -116,7 +116,7 @@ export const EventsPage: React.FC = () => {
 
   return (
     <Layout title="Мероприятия" showBack>
-      <div className="page-content max-w-4xl mx-auto px-4 sm:px-6" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+      <div className="events-page page-content mx-auto px-4 sm:px-6" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -126,9 +126,6 @@ export const EventsPage: React.FC = () => {
           <h1 style={{ color: 'var(--app-text-strong)', fontWeight: 800, fontSize: '1.75rem', marginBottom: 8 }}>
             Мероприятия
           </h1>
-          <p style={{ color: 'var(--app-text-muted)', fontSize: '0.9rem' }}>
-            Конференции, хакатоны, фестивали и другие события АЭУС
-          </p>
         </motion.div>
 
         <motion.div
@@ -242,8 +239,10 @@ export const EventsPage: React.FC = () => {
                   {/* Image */}
                   <div
                     style={{
-                      height: 180,
-                      minWidth: 200,
+                      height: 351,
+                      width: 'clamp(29.25rem, 43vw, 50.7rem)',
+                      minWidth: 'min(468px, 100%)',
+                      maxWidth: '100%',
                       flexShrink: 0,
                       overflow: 'hidden',
                       position: 'relative',
@@ -272,10 +271,10 @@ export const EventsPage: React.FC = () => {
                         textAlign: 'center',
                       }}
                     >
-                      <div style={{ fontSize: '1.3rem', fontWeight: 800, color: event.color, lineHeight: 1 }}>
+                      <div style={{ fontSize: '1.55rem', fontWeight: 800, color: event.color, lineHeight: 1 }}>
                         {event.dateShort.day}
                       </div>
-                      <div style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)', fontWeight: 600 }}>
+                      <div style={{ fontSize: '0.95rem', color: 'var(--app-text-soft)', fontWeight: 600 }}>
                         {event.dateShort.month}
                       </div>
                     </div>
@@ -290,7 +289,7 @@ export const EventsPage: React.FC = () => {
                         border: `1px solid ${event.color}40`,
                         borderRadius: 20,
                         padding: '0.25rem 0.75rem',
-                        fontSize: '0.875rem',
+                        fontSize: '0.95rem',
                         color: event.color,
                         fontWeight: 600,
                       }}
@@ -300,22 +299,22 @@ export const EventsPage: React.FC = () => {
                   </div>
 
                   {/* Content */}
-                  <div style={{ padding: '1.25rem', flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                    <h3 style={{ color: 'var(--app-text-strong)', fontWeight: 700, fontSize: '1rem', lineHeight: 1.4, margin: 0 }}>
+                  <div style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    <h3 style={{ color: 'var(--app-text-strong)', fontWeight: 750, fontSize: '1.18rem', lineHeight: 1.35, margin: 0 }}>
                       {event.title}
                     </h3>
-                    <p style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)', lineHeight: 1.55, margin: 0 }}>
+                    <p style={{ fontSize: '1rem', color: 'var(--app-text-muted)', lineHeight: 1.55, margin: 0 }}>
                       {event.description}
                     </p>
 
                     <div className="flex flex-col gap-1.5">
                       <div className="flex items-center gap-2">
-                        <MapPin size={13} style={{ color: 'var(--app-icon-muted)', flexShrink: 0 }} />
-                        <span style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)' }}>{event.location}</span>
+                        <MapPin size={15} style={{ color: 'var(--app-icon-muted)', flexShrink: 0 }} />
+                        <span style={{ fontSize: '1rem', color: 'var(--app-text-muted)' }}>{event.location}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Users size={13} style={{ color: 'var(--app-icon-muted)', flexShrink: 0 }} />
-                        <span style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)' }}>
+                        <Users size={15} style={{ color: 'var(--app-icon-muted)', flexShrink: 0 }} />
+                        <span style={{ fontSize: '1rem', color: 'var(--app-text-muted)' }}>
                           {event.registered} / {event.capacity} мест
                         </span>
                       </div>
@@ -341,7 +340,7 @@ export const EventsPage: React.FC = () => {
                           }}
                         />
                       </div>
-                      <div style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)', marginTop: 3 }}>
+                      <div style={{ fontSize: '0.95rem', color: 'var(--app-text-soft)', marginTop: 4 }}>
                         {fillPct}% мест занято
                       </div>
                     </div>
@@ -358,7 +357,7 @@ export const EventsPage: React.FC = () => {
                           border: `1px solid ${isRegistered ? 'rgba(127,184,160,0.4)' : event.color + '40'}`,
                           background: isRegistered ? 'rgba(127,184,160,0.15)' : `${event.color}12`,
                           color: isRegistered ? 'var(--brand-mint-strong)' : event.color,
-                          fontSize: '0.875rem',
+                          fontSize: '0.98rem',
                           fontWeight: 700,
                           cursor: 'pointer',
                           transition: 'all 0.2s',
