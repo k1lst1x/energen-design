@@ -1,109 +1,127 @@
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
-import { CalendarDays, MapPin, Users, Filter, Search, ExternalLink, Bell, ChevronRight } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { ArrowUpRight, CalendarDays, MapPin, Users, Filter, Search, ExternalLink, Bell, Sparkles } from 'lucide-react';
+import { useNavigate, useSearchParams } from 'react-router';
 import { Layout } from '../components/Layout';
 import { useLanguage } from '../context/LanguageContext';
+import { Club, dateFilters, events, filterTypes, getClubsForEvent } from '../data/campusData';
 
-const eventImg1 = 'https://images.unsplash.com/photo-1606761568499-6d2451b23c66?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80';
-const eventImg2 = 'https://images.unsplash.com/photo-1631350397792-8e0c2de5b637?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80';
-const eventImg3 = 'https://images.unsplash.com/photo-1712029972454-0ed8bb0c0fd2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80';
-const eventImg4 = 'https://images.unsplash.com/photo-1680264370818-659352fa16f6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80';
+interface EventClubCarouselProps {
+  clubs: Club[];
+  onOpenClub: (clubId: number) => void;
+}
 
-const events = [
-  {
-    id: 1,
-    title: 'Международная конференция по энергетике ENERGY-2026',
-    date: '15 апреля 2026',
-    dateShort: { day: '15', month: 'АПР' },
-    location: 'Главный актовый зал, Корпус A',
-    type: 'conference',
-    period: 'month',
-    typeLabel: 'Конференция',
-    capacity: 250,
-    registered: 178,
-    image: eventImg1,
-    color: '#7FB8A0',
-    description: 'Ежегодная международная конференция, объединяющая учёных и специалистов в области энергетики и электроэнергетики.',
-  },
-  {
-    id: 2,
-    title: 'Хакатон по цифровым технологиям DIGITECH-2026',
-    date: '22 апреля 2026',
-    dateShort: { day: '22', month: 'АПР' },
-    location: 'Компьютерный центр, Корпус B',
-    type: 'hackathon',
-    period: 'week',
-    typeLabel: 'Хакатон',
-    capacity: 120,
-    registered: 98,
-    image: eventImg2,
-    color: '#9B7EC8',
-    description: '48-часовой хакатон для студентов по разработке инновационных решений в области цифровых технологий.',
-  },
-  {
-    id: 3,
-    title: 'День открытых дверей АЭУС 2026',
-    date: '3 мая 2026',
-    dateShort: { day: '3', month: 'МАЙ' },
-    location: 'Главный корпус',
-    type: 'open-day',
-    period: 'month',
-    typeLabel: 'Открытый день',
-    capacity: 500,
-    registered: 312,
-    image: eventImg3,
-    color: '#7EC8E3',
-    description: 'Познакомьтесь с нашим университетом, кафедрами, преподавателями и возможностями для абитуриентов.',
-  },
-  {
-    id: 4,
-    title: 'Студенческий фестиваль науки и творчества',
-    date: '10 мая 2026',
-    dateShort: { day: '10', month: 'МАЙ' },
-    location: 'Студенческий центр',
-    type: 'festival',
-    period: 'past',
-    typeLabel: 'Фестиваль',
-    capacity: 400,
-    registered: 201,
-    image: eventImg4,
-    color: '#E87C9B',
-    description: 'Ежегодный праздник науки, инноваций и студенческого творчества с выставками проектов и концертами.',
-  },
-];
+const EventClubCarousel: React.FC<EventClubCarouselProps> = ({ clubs, onOpenClub }) => {
+  const [activeIndex, setActiveIndex] = useState(0);
 
-const filterTypes = [
-  { key: 'all', label: 'Все' },
-  { key: 'conference', label: 'Конференции' },
-  { key: 'hackathon', label: 'Хакатоны' },
-  { key: 'open-day', label: 'Открытые дни' },
-  { key: 'festival', label: 'Фестивали' },
-];
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [clubs]);
 
-const dateFilters = [
-  { key: 'all', label: 'Все даты' },
-  { key: 'week', label: 'Эта неделя' },
-  { key: 'month', label: 'Этот месяц' },
-  { key: 'past', label: 'Архив' },
-];
+  useEffect(() => {
+    if (clubs.length < 2) return;
+
+    const interval = window.setInterval(() => {
+      setActiveIndex(prev => (prev + 1) % clubs.length);
+    }, 3200);
+
+    return () => window.clearInterval(interval);
+  }, [clubs.length]);
+
+  if (clubs.length === 0) return null;
+
+  const club = clubs[activeIndex % clubs.length];
+
+  return (
+    <div className="event-clubs-block">
+      <div className="event-clubs-title">Клубы участвуют в проведении</div>
+      <div className="event-club-carousel">
+        <AnimatePresence mode="wait">
+          <motion.button
+            key={club.id}
+            type="button"
+            className="event-club-slide"
+            initial={{ opacity: 0, x: 18 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -18 }}
+            transition={{ duration: 0.28 }}
+            onClick={() => onOpenClub(club.id)}
+            style={{
+              borderColor: `${club.color}38`,
+              background: club.bg,
+              color: club.color,
+            }}
+          >
+            <img src={club.image} alt="" />
+            <span>
+              <strong>{club.name}</strong>
+              <small>{club.tags.slice(0, 2).join(' · ')}</small>
+            </span>
+            <ArrowUpRight size={16} />
+          </motion.button>
+        </AnimatePresence>
+      </div>
+      {clubs.length > 1 && (
+        <div className="event-club-dots">
+          {clubs.map((item, index) => (
+            <button
+              key={item.id}
+              type="button"
+              aria-label={`Показать клуб ${index + 1}`}
+              className={index === activeIndex ? 'event-club-dot event-club-dot-active' : 'event-club-dot'}
+              onClick={() => setActiveIndex(index)}
+              style={{ background: index === activeIndex ? club.color : 'var(--app-control-border)' }}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const EventsPage: React.FC = () => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [activeFilter, setActiveFilter] = useState('all');
   const [activeDate, setActiveDate] = useState('all');
   const [query, setQuery] = useState('');
   const [registeredIds, setRegisteredIds] = useState<Set<number>>(new Set());
+  const focusedEventId = Number(searchParams.get('event')) || null;
 
   const filtered = events.filter(e => {
     const normalized = query.trim().toLowerCase();
+    const eventClubs = getClubsForEvent(e);
     const matchesType = activeFilter === 'all' || e.type === activeFilter;
     const matchesDate = activeDate === 'all' || e.period === activeDate;
-    const matchesQuery = !normalized || [e.title, e.description, e.location, e.typeLabel]
+    const matchesQuery = !normalized || [
+      e.title,
+      e.description,
+      e.location,
+      e.typeLabel,
+      eventClubs.map(club => `${club.name} ${club.tags.join(' ')}`).join(' '),
+    ]
       .join(' ')
       .toLowerCase()
       .includes(normalized);
     return matchesType && matchesDate && matchesQuery;
   });
+
+  const visibleEvents = useMemo(() => {
+    if (!focusedEventId) return filtered;
+
+    return [...filtered].sort((a, b) => {
+      if (a.id === focusedEventId) return -1;
+      if (b.id === focusedEventId) return 1;
+      return 0;
+    });
+  }, [filtered, focusedEventId]);
+
+  const nearestEvent = useMemo(() => {
+    const activeEvents = events.filter(event => event.period !== 'past');
+    const source = activeEvents.length > 0 ? activeEvents : events;
+    return [...source].sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime())[0];
+  }, []);
 
   const handleRegister = (id: number) => {
     setRegisteredIds(prev => {
@@ -207,11 +225,43 @@ export const EventsPage: React.FC = () => {
           ))}
         </motion.div>
 
+        {nearestEvent && (
+          <motion.div
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.14 }}
+            className="event-nearest-card"
+            style={{
+              borderColor: `${nearestEvent.color}35`,
+              background: `linear-gradient(135deg, ${nearestEvent.color}18, var(--app-card) 42%)`,
+            }}
+          >
+            <div className="event-nearest-icon" style={{ color: nearestEvent.color }}>
+              <Sparkles size={20} />
+            </div>
+            <div>
+              <div className="event-nearest-label" style={{ color: nearestEvent.color }}>Ближайшее мероприятие</div>
+              <h2>{nearestEvent.title}</h2>
+              <p>{nearestEvent.date} · {nearestEvent.location}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => navigate(`/events?event=${nearestEvent.id}`)}
+              style={{ color: nearestEvent.color, borderColor: `${nearestEvent.color}45` }}
+            >
+              Показать
+              <ArrowUpRight size={15} />
+            </button>
+          </motion.div>
+        )}
+
         {/* Events grid */}
         <div className="flex flex-col gap-4">
-          {filtered.map((event, idx) => {
+          {visibleEvents.map((event, idx) => {
             const isRegistered = registeredIds.has(event.id);
             const fillPct = Math.round((event.registered / event.capacity) * 100);
+            const eventClubs = getClubsForEvent(event);
+            const isFocused = event.id === focusedEventId;
 
             return (
               <motion.div
@@ -221,18 +271,19 @@ export const EventsPage: React.FC = () => {
                 transition={{ delay: idx * 0.08 }}
                 style={{
                   background: 'var(--app-card)',
-                  border: '1px solid var(--app-border)',
+                  border: `1px solid ${isFocused ? `${event.color}75` : 'var(--app-border)'}`,
                   borderRadius: 20,
                   overflow: 'hidden',
                   transition: 'border-color 0.2s, box-shadow 0.2s',
+                  boxShadow: isFocused ? `0 0 0 1px ${event.color}25, 0 18px 50px ${event.color}12` : 'none',
                 }}
                 onMouseEnter={e => {
-                  e.currentTarget.style.borderColor = `${event.color}30`;
+                  e.currentTarget.style.borderColor = `${event.color}${isFocused ? '90' : '30'}`;
                   e.currentTarget.style.boxShadow = `0 4px 30px ${event.color}15`;
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.borderColor = 'var(--app-border)';
-                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.borderColor = isFocused ? `${event.color}75` : 'var(--app-border)';
+                  e.currentTarget.style.boxShadow = isFocused ? `0 0 0 1px ${event.color}25, 0 18px 50px ${event.color}12` : 'none';
                 }}
               >
                 <div className="flex flex-col sm:flex-row">
@@ -300,6 +351,11 @@ export const EventsPage: React.FC = () => {
 
                   {/* Content */}
                   <div style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    {isFocused && (
+                      <div className="event-focus-badge" style={{ color: event.color, borderColor: `${event.color}40`, background: `${event.color}12` }}>
+                        Открыто из клуба
+                      </div>
+                    )}
                     <h3 style={{ color: 'var(--app-text-strong)', fontWeight: 750, fontSize: '1.18rem', lineHeight: 1.35, margin: 0 }}>
                       {event.title}
                     </h3>
@@ -319,6 +375,31 @@ export const EventsPage: React.FC = () => {
                         </span>
                       </div>
                     </div>
+
+                    {eventClubs.length > 0 && (
+                      <div className="event-clubs-block">
+                        <div className="event-clubs-title">Клубы участвуют в проведении</div>
+                        <div className="event-clubs-list">
+                          {eventClubs.map(club => (
+                            <button
+                              key={club.id}
+                              type="button"
+                              className="event-club-pill"
+                              onClick={() => navigate(`/clubs?club=${club.id}`)}
+                              style={{
+                                borderColor: `${club.color}38`,
+                                background: club.bg,
+                                color: club.color,
+                              }}
+                            >
+                              <img src={club.image} alt="" />
+                              <span>{club.name}</span>
+                              <ArrowUpRight size={14} />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
 
                     {/* Progress bar */}
                     <div>

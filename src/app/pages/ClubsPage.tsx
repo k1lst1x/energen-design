@@ -1,105 +1,30 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Users, Mail, Phone, Instagram, X, ChevronRight, Trophy, Search, Filter } from 'lucide-react';
+import { ArrowUpRight, CalendarDays, ChevronLeft, ChevronRight, Filter, Instagram, Mail, MapPin, Music2, Phone, Search, Trophy, Users, X } from 'lucide-react';
+import { useNavigate, useSearchParams } from 'react-router';
 import { Layout } from '../components/Layout';
-import { useLanguage } from '../context/LanguageContext';
-
-const roboticsImg = 'https://images.unsplash.com/photo-1755053757912-a63da9d6e0e2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80';
-const musicImg = 'https://images.unsplash.com/photo-1770844049822-583611b8efb3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80';
-const hackImg = 'https://images.unsplash.com/photo-1631350397792-8e0c2de5b637?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80';
-const clubImg4 = 'https://images.unsplash.com/photo-1680264370818-659352fa16f6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=600&q=80';
-
-const clubs = [
-  {
-    id: 1,
-    name: 'Клуб робототехники AUES Robotics',
-    shortDesc: 'Проектируем и создаём роботов для соревнований',
-    fullDesc: 'Клуб занимается разработкой роботов различного назначения — от манипуляторов до автономных дронов. Участвуем в международных соревнованиях RoboCup и Kazakhstan Robotics Olympiad.',
-    members: 42,
-    image: roboticsImg,
-    color: '#7FB8A0',
-    bg: 'rgba(127,184,160,0.1)',
-    contacts: {
-      email: 'robotics@aues.kz',
-      phone: '+7 (727) 292-07-60 доб. 2310',
-      instagram: '@aues_robotics',
-    },
-    tags: ['Инженерия', 'Программирование', 'Соревнования'],
-    direction: 'engineering',
-    achievements: ['🥇 RoboCup 2025 — 1 место в регионе', '🏆 КазРобот 2024 — Гран-при'],
-  },
-  {
-    id: 2,
-    name: 'Студенческий музыкальный клуб AUES Music',
-    shortDesc: 'Вокал, инструменты, концерты и фестивали',
-    fullDesc: 'Открыты для всех любителей музыки — от классики до современных жанров. Проводим концерты, участвуем в университетских мероприятиях и городских фестивалях.',
-    members: 78,
-    image: musicImg,
-    color: '#E87C9B',
-    bg: 'rgba(232,124,155,0.1)',
-    contacts: {
-      email: 'music@aues.kz',
-      phone: '+7 (727) 292-07-60 доб. 2400',
-      instagram: '@aues_music',
-    },
-    tags: ['Музыка', 'Концерты', 'Творчество'],
-    direction: 'creative',
-    achievements: ['🎤 Лучший студенческий клуб 2025', '🎵 Гала-концерт "Звёзды АЭУС" 2024'],
-  },
-  {
-    id: 3,
-    name: 'IT и Хакатон клуб HackAUES',
-    shortDesc: 'Хакатоны, проекты, стартапы, нетворкинг',
-    fullDesc: 'Объединяем разработчиков, дизайнеров и предпринимателей. Организуем хакатоны, воркшопы и менторинг-сессии с представителями IT-индустрии Казахстана.',
-    members: 95,
-    image: hackImg,
-    color: '#9B7EC8',
-    bg: 'rgba(155,126,200,0.1)',
-    contacts: {
-      email: 'hack@aues.kz',
-      phone: '+7 (727) 292-07-60 доб. 2510',
-      instagram: '@hackaues',
-    },
-    tags: ['IT', 'Программирование', 'Стартапы', 'Нетворкинг'],
-    direction: 'engineering',
-    achievements: ['💡 Лучший стартап-клуб KZ 2025', '🚀 3 команды в акселератор Q Accelerator'],
-  },
-  {
-    id: 4,
-    name: 'Волонтёрский клуб AUES Volunteers',
-    shortDesc: 'Социальные проекты и помощь обществу',
-    fullDesc: 'Реализуем экологические, социальные и образовательные инициативы. Более 500 волонтёрских часов ежегодно и партнёрство с городскими организациями Алматы.',
-    members: 130,
-    image: clubImg4,
-    color: '#7EC8E3',
-    bg: 'rgba(126,200,227,0.1)',
-    contacts: {
-      email: 'volunteer@aues.kz',
-      phone: '+7 (727) 292-07-60 доб. 2600',
-      instagram: '@aues_volunteers',
-    },
-    tags: ['Волонтёрство', 'Экология', 'Социальные проекты'],
-    direction: 'volunteer',
-    achievements: ['🌱 Eco Award 2025', '❤️ Лучший волонтёрский клуб ВУЗа Алматы'],
-  },
-];
-
-const directions = [
-  { key: 'all', label: 'Все' },
-  { key: 'engineering', label: 'Наука и техника' },
-  { key: 'creative', label: 'Творчество' },
-  { key: 'volunteer', label: 'Волонтёрство' },
-];
+import { Club, clubs, directions, getEventsForClub, getNearestEventForClub } from '../data/campusData';
 
 interface ClubDetailProps {
-  club: typeof clubs[0];
+  club: Club;
   onClose: () => void;
-  onJoin: () => void;
-  isJoined: boolean;
+  onOpenEvent: (eventId: number) => void;
 }
 
-const ClubDetail: React.FC<ClubDetailProps> = ({ club, onClose, onJoin, isJoined }) => {
-  const { t } = useLanguage();
+const ClubDetail: React.FC<ClubDetailProps> = ({ club, onClose, onOpenEvent }) => {
+  const [activeSlide, setActiveSlide] = useState(0);
+  const gallery = club.gallery.length > 0 ? club.gallery : [club.image];
+  const clubEvents = getEventsForClub(club.id);
+  const nearestEvent = getNearestEventForClub(club.id);
+
+  const showPrevSlide = () => {
+    setActiveSlide(prev => (prev - 1 + gallery.length) % gallery.length);
+  };
+
+  const showNextSlide = () => {
+    setActiveSlide(prev => (prev + 1) % gallery.length);
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -109,141 +34,181 @@ const ClubDetail: React.FC<ClubDetailProps> = ({ club, onClose, onJoin, isJoined
         position: 'fixed',
         inset: 0,
         background: 'var(--app-modal-backdrop)',
-        backdropFilter: 'blur(8px)',
+        backdropFilter: 'blur(14px)',
         zIndex: 100,
         display: 'flex',
-        alignItems: 'flex-end',
+        alignItems: 'center',
         justifyContent: 'center',
-        padding: '0 0 0 0',
+        padding: '1.5rem',
       }}
       onClick={onClose}
     >
       <motion.div
-        initial={{ y: '100%' }}
-        animate={{ y: 0 }}
-        exit={{ y: '100%' }}
-        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+        initial={{ opacity: 0, y: 26, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 26, scale: 0.98 }}
+        transition={{ type: 'spring', damping: 24, stiffness: 260 }}
+        className="club-modal"
         style={{
           background: 'var(--app-card)',
           border: '1px solid var(--app-border)',
-          borderRadius: '24px 24px 0 0',
-          width: '100%',
-          maxWidth: 600,
+          borderRadius: 26,
+          width: 'min(94vw, 920px)',
           maxHeight: '90vh',
           overflowY: 'auto',
+          boxShadow: '0 30px 100px rgba(0, 0, 0, 0.45)',
         }}
         onClick={e => e.stopPropagation()}
       >
-        {/* Banner image */}
-        <div style={{ height: 200, overflow: 'hidden', position: 'relative', borderRadius: '24px 24px 0 0' }}>
-          <img src={club.image} alt={club.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          <div style={{ position: 'absolute', inset: 0, background: 'var(--app-image-scrim)' }} />
+        <div className="club-modal-gallery">
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={gallery[activeSlide]}
+              src={gallery[activeSlide]}
+              alt={club.name}
+              initial={{ opacity: 0, scale: 1.04 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.28 }}
+            />
+          </AnimatePresence>
+          <div className="club-modal-gallery-scrim" />
+
+          {gallery.length > 1 && (
+            <>
+              <button
+                type="button"
+                className="club-modal-nav club-modal-nav-left"
+                onClick={event => {
+                  event.stopPropagation();
+                  showPrevSlide();
+                }}
+                aria-label="Предыдущее фото"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <button
+                type="button"
+                className="club-modal-nav club-modal-nav-right"
+                onClick={event => {
+                  event.stopPropagation();
+                  showNextSlide();
+                }}
+                aria-label="Следующее фото"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </>
+          )}
+
+          <div className="club-modal-slide-count">
+            {activeSlide + 1} / {gallery.length}
+          </div>
+
           <button
             onClick={onClose}
-            style={{
-              position: 'absolute', top: 16, right: 16,
-              width: 36, height: 36, borderRadius: '50%',
-              background: 'var(--app-overlay-panel)', border: '1px solid var(--app-border)',
-              color: 'var(--app-text)', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}
+            className="club-modal-close"
+            aria-label="Закрыть"
           >
-            <X size={18} />
+            <X size={20} />
           </button>
+
+          <div className="club-modal-thumbs">
+            {gallery.map((photo, index) => (
+              <button
+                key={photo}
+                type="button"
+                className={index === activeSlide ? 'club-modal-thumb club-modal-thumb-active' : 'club-modal-thumb'}
+                onClick={event => {
+                  event.stopPropagation();
+                  setActiveSlide(index);
+                }}
+                style={{
+                  borderColor: index === activeSlide ? club.color : 'var(--app-border)',
+                }}
+                aria-label={`Фото ${index + 1}`}
+              >
+                <img src={photo} alt="" />
+              </button>
+            ))}
+          </div>
         </div>
 
-        <div style={{ padding: '1.5rem' }}>
-          {/* Name */}
-          <h2 style={{ color: 'var(--app-text-strong)', fontWeight: 800, fontSize: '1.25rem', marginBottom: 8 }}>{club.name}</h2>
-          <div className="flex items-center gap-2" style={{ marginBottom: '1rem' }}>
-            <Users size={14} style={{ color: club.color }} />
-            <span style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)' }}>{club.members} участников</span>
+        <div className="club-modal-content">
+          <div className="club-modal-main">
+            <div className="club-modal-kicker" style={{ color: club.color }}>
+              <Users size={16} />
+              {club.members} участников
+            </div>
+            <h2>{club.name}</h2>
+
+            <div className="club-modal-tags">
+              {club.tags.map(tag => (
+                <span key={tag} style={{ background: club.bg, borderColor: `${club.color}35`, color: club.color }}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            <p className="club-modal-desc">{club.fullDesc}</p>
+
+            <div className="club-modal-info-grid">
+              {[
+                { icon: MapPin, label: 'Где', value: club.location },
+                { icon: CalendarDays, label: 'Когда', value: club.schedule },
+                { icon: Trophy, label: 'Ближайшее', value: club.nextEvent },
+              ].map(item => {
+                const Icon = item.icon;
+                return (
+                  <div key={item.label} className="club-modal-info-card">
+                    <Icon size={17} style={{ color: club.color }} />
+                    <span>{item.label}</span>
+                    <strong>{item.value}</strong>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2" style={{ marginBottom: '1rem' }}>
-            {club.tags.map(tag => (
-              <span
-                key={tag}
-                style={{
-                  padding: '0.3rem 0.75rem',
-                  borderRadius: 20,
-                  background: club.bg,
-                  border: `1px solid ${club.color}30`,
-                  fontSize: '0.875rem',
-                  color: club.color,
-                }}
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
+          <aside className="club-modal-side">
+            <div className="club-modal-panel">
+              <div className="club-modal-panel-title">
+                <Trophy size={16} style={{ color: club.color }} />
+                Достижения
+              </div>
+              {club.achievements.map((achievement, index) => (
+                <p key={index}>{achievement}</p>
+              ))}
+            </div>
 
-          {/* Description */}
-          <p style={{ color: 'var(--app-text-muted)', fontSize: '0.9rem', lineHeight: 1.65, marginBottom: '1.25rem' }}>
-            {club.fullDesc}
-          </p>
+            <div className="club-modal-panel">
+              <div className="club-modal-panel-title">
+                <Mail size={16} style={{ color: club.color }} />
+                Контакты
+              </div>
+              <a href={`mailto:${club.contacts.email}`} className="club-modal-contact">
+                <Mail size={15} style={{ color: club.color }} />
+                {club.contacts.email}
+              </a>
+              <a href={`tel:${club.contacts.phone.replace(/[^\d+]/g, '')}`} className="club-modal-contact">
+                <Phone size={15} style={{ color: club.color }} />
+                {club.contacts.phone}
+              </a>
+            </div>
 
-          {/* Achievements */}
-          <div
-            style={{
-              background: 'var(--app-bg-soft)',
-              border: '1px solid var(--app-border)',
-              borderRadius: 14,
-              padding: '1rem',
-              marginBottom: '1.25rem',
-            }}
-          >
-            <p style={{ fontSize: '0.875rem', color: 'var(--app-text-soft)', fontWeight: 600, marginBottom: '0.75rem' }}>ДОСТИЖЕНИЯ</p>
-            {club.achievements.map((a, i) => (
-              <p key={i} style={{ fontSize: '0.875rem', color: 'var(--app-text)', marginBottom: 4 }}>{a}</p>
-            ))}
-          </div>
-
-          {/* Contacts */}
-          <div className="flex flex-col gap-2" style={{ marginBottom: '1.5rem' }}>
-            {[
-              { icon: Mail, value: club.contacts.email },
-              { icon: Phone, value: club.contacts.phone },
-              { icon: Instagram, value: club.contacts.instagram },
-            ].map(c => {
-              const Icon = c.icon;
-              return (
-                <div
-                  key={c.value}
-                  className="flex items-center gap-3"
-                  style={{
-                    padding: '0.6rem 0.875rem',
-                    background: 'var(--app-control)',
-                    border: '1px solid var(--app-control-border)',
-                    borderRadius: 10,
-                  }}
-                >
-                  <Icon size={14} style={{ color: club.color, flexShrink: 0 }} />
-                  <span style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)' }}>{c.value}</span>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Join button */}
-          <button
-            onClick={onJoin}
-            style={{
-              width: '100%',
-              background: isJoined ? 'rgba(127,184,160,0.15)' : `linear-gradient(135deg, ${club.color}, ${club.color}99)`,
-              border: isJoined ? '1px solid rgba(127,184,160,0.4)' : 'none',
-              borderRadius: 14,
-              padding: '1rem',
-              color: isJoined ? 'var(--brand-mint-strong)' : '#0F0F0F',
-              fontWeight: 700,
-              fontSize: '0.95rem',
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-            }}
-          >
-            {isJoined ? '✓ Вы уже в клубе' : t('joinClub')}
-          </button>
+            <div className="club-modal-socials">
+              <a href={club.socials.instagram} target="_blank" rel="noreferrer" style={{ borderColor: `${club.color}45` }}>
+                <Instagram size={18} style={{ color: club.color }} />
+                Instagram
+                <ArrowUpRight size={15} />
+              </a>
+              <a href={club.socials.tiktok} target="_blank" rel="noreferrer" style={{ borderColor: `${club.color}45` }}>
+                <Music2 size={18} style={{ color: club.color }} />
+                TikTok
+                <ArrowUpRight size={15} />
+              </a>
+            </div>
+          </aside>
         </div>
       </motion.div>
     </motion.div>
@@ -251,9 +216,7 @@ const ClubDetail: React.FC<ClubDetailProps> = ({ club, onClose, onJoin, isJoined
 };
 
 export const ClubsPage: React.FC = () => {
-  const { t } = useLanguage();
   const [selectedClub, setSelectedClub] = useState<typeof clubs[0] | null>(null);
-  const [joinedIds, setJoinedIds] = useState<Set<number>>(new Set());
   const [query, setQuery] = useState('');
   const [activeDirection, setActiveDirection] = useState('all');
 
@@ -266,27 +229,17 @@ export const ClubsPage: React.FC = () => {
       .includes(normalized);
     return matchesDirection && matchesQuery;
   });
-
-  const handleJoin = () => {
-    if (selectedClub) {
-      setJoinedIds(prev => {
-        const next = new Set(prev);
-        if (next.has(selectedClub.id)) next.delete(selectedClub.id);
-        else next.add(selectedClub.id);
-        return next;
-      });
-    }
-  };
+  const spotlightClub = filteredClubs[0] ?? clubs[0];
 
   return (
     <Layout title="Клубы и организации" showBack>
-      <div className="page-content max-w-4xl mx-auto px-4 sm:px-6" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+      <div className="clubs-page page-content mx-auto px-4 sm:px-6" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
         {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: '2rem' }}>
-          <h1 style={{ color: 'var(--app-text-strong)', fontWeight: 800, fontSize: '1.75rem', marginBottom: 8 }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: '1.5rem' }}>
+          <h1 style={{ color: 'var(--app-text-strong)', fontWeight: 850, fontSize: '2rem', marginBottom: 8 }}>
             Студенческие клубы
           </h1>
-          <p style={{ color: 'var(--app-text-muted)', fontSize: '0.9rem' }}>
+          <p style={{ color: 'var(--app-text-muted)', fontSize: '1rem' }}>
             Найди своё сообщество, развивай таланты и заводи знакомства
           </p>
         </motion.div>
@@ -347,6 +300,60 @@ export const ClubsPage: React.FC = () => {
           ))}
         </motion.div>
 
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.16 }}
+          className="clubs-spotlight"
+          onClick={() => setSelectedClub(spotlightClub)}
+        >
+          <div className="clubs-spotlight-media">
+            <img src={spotlightClub.image} alt={spotlightClub.name} />
+            <div className="clubs-spotlight-scrim" />
+            <div className="clubs-spotlight-badge" style={{ color: spotlightClub.color }}>
+              <Trophy size={15} />
+              Клуб в фокусе
+            </div>
+          </div>
+
+          <div className="clubs-spotlight-body">
+            <div className="clubs-spotlight-kicker" style={{ color: spotlightClub.color }}>
+              {spotlightClub.tags[0]} · {spotlightClub.members} участников
+            </div>
+            <h2 className="clubs-spotlight-title">{spotlightClub.name}</h2>
+            <p className="clubs-spotlight-desc">{spotlightClub.fullDesc}</p>
+
+            <div className="clubs-spotlight-meta">
+              {[
+                { icon: MapPin, label: spotlightClub.location },
+                { icon: CalendarDays, label: spotlightClub.schedule },
+                { icon: Trophy, label: spotlightClub.nextEvent },
+              ].map(item => {
+                const Icon = item.icon;
+                return (
+                  <span key={item.label} style={{ borderColor: `${spotlightClub.color}35` }}>
+                    <Icon size={15} style={{ color: spotlightClub.color }} />
+                    {item.label}
+                  </span>
+                );
+              })}
+            </div>
+
+            <div className="clubs-spotlight-actions">
+              <button
+                type="button"
+                style={{
+                  background: `linear-gradient(135deg, ${spotlightClub.color}, ${spotlightClub.color}cc)`,
+                  color: '#0f0f0f',
+                }}
+              >
+                Открыть клуб
+                <ArrowUpRight size={16} />
+              </button>
+            </div>
+          </div>
+        </motion.div>
+
         {/* Stats */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -356,7 +363,7 @@ export const ClubsPage: React.FC = () => {
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
             gap: '1rem',
-            marginBottom: '2rem',
+            marginBottom: '1.5rem',
           }}
         >
           {[
@@ -370,8 +377,8 @@ export const ClubsPage: React.FC = () => {
                 background: 'var(--app-card)',
                 border: '1px solid var(--app-border)',
                 borderRadius: 16,
-                padding: '1rem',
-                textAlign: 'center',
+                padding: '1.1rem 1.25rem',
+                textAlign: 'left',
               }}
             >
               <div style={{ fontSize: '1.6rem', fontWeight: 800, color: stat.color, lineHeight: 1 }}>
@@ -386,12 +393,11 @@ export const ClubsPage: React.FC = () => {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 280px), 1fr))',
-            gap: '1rem',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 420px), 1fr))',
+            gap: '1.25rem',
           }}
         >
           {filteredClubs.map((club, idx) => {
-            const isJoined = joinedIds.has(club.id);
             return (
               <motion.div
                 key={club.id}
@@ -419,7 +425,7 @@ export const ClubsPage: React.FC = () => {
                 onClick={() => setSelectedClub(club)}
               >
                 {/* Image */}
-                <div style={{ height: 150, overflow: 'hidden', position: 'relative' }}>
+                <div style={{ height: 235, overflow: 'hidden', position: 'relative' }}>
                   <img
                     src={club.image}
                     alt={club.name}
@@ -446,33 +452,43 @@ export const ClubsPage: React.FC = () => {
                     <span style={{ fontSize: '0.875rem', color: 'var(--app-text)' }}>{club.members}</span>
                   </div>
 
-                  {isJoined && (
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: 10,
-                        left: 10,
-                        background: 'rgba(127,184,160,0.9)',
-                        borderRadius: 20,
-                        padding: '0.25rem 0.625rem',
-                        fontSize: '0.875rem',
-                        color: '#0F0F0F',
-                        fontWeight: 700,
-                      }}
-                    >
-                      ✓ В клубе
-                    </div>
-                  )}
                 </div>
 
                 {/* Info */}
-                <div style={{ padding: '1rem' }}>
-                  <h3 style={{ color: 'var(--app-text-strong)', fontWeight: 700, fontSize: '0.95rem', lineHeight: 1.35, marginBottom: 6 }}>
+                <div style={{ padding: '1.2rem' }}>
+                  <h3 style={{ color: 'var(--app-text-strong)', fontWeight: 760, fontSize: '1.1rem', lineHeight: 1.35, marginBottom: 8 }}>
                     {club.name}
                   </h3>
-                  <p style={{ fontSize: '0.875rem', color: 'var(--app-text-muted)', lineHeight: 1.5, marginBottom: '0.875rem' }}>
+                  <p style={{ fontSize: '0.98rem', color: 'var(--app-text-muted)', lineHeight: 1.5, marginBottom: '0.9rem' }}>
                     {club.shortDesc}
                   </p>
+
+                  <div className="grid grid-cols-2 gap-2" style={{ marginBottom: '0.9rem' }}>
+                    {[
+                      { icon: MapPin, value: club.location },
+                      { icon: CalendarDays, value: club.schedule },
+                    ].map(item => {
+                      const Icon = item.icon;
+                      return (
+                        <div
+                          key={item.value}
+                          className="flex items-center gap-2"
+                          style={{
+                            minHeight: 38,
+                            padding: '0.45rem 0.6rem',
+                            borderRadius: 12,
+                            background: 'var(--app-bg-soft)',
+                            border: '1px solid var(--app-border)',
+                            color: 'var(--app-text-muted)',
+                            fontSize: '0.9rem',
+                          }}
+                        >
+                          <Icon size={14} style={{ color: club.color, flexShrink: 0 }} />
+                          <span>{item.value}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
 
                   <div className="flex flex-wrap gap-1.5" style={{ marginBottom: '0.875rem' }}>
                     {club.tags.slice(0, 2).map(tag => (
@@ -483,7 +499,7 @@ export const ClubsPage: React.FC = () => {
                           borderRadius: 20,
                           background: club.bg,
                           border: `1px solid ${club.color}25`,
-                          fontSize: '0.875rem',
+                          fontSize: '0.9rem',
                           color: club.color,
                         }}
                       >
@@ -497,9 +513,9 @@ export const ClubsPage: React.FC = () => {
                     style={{ paddingTop: '0.75rem', borderTop: '1px solid var(--app-border)' }}
                   >
                     <span style={{ fontSize: '0.875rem', color: club.color, fontWeight: 600 }}>
-                      {isJoined ? 'Вы участник' : 'Подробнее'}
+                      Подробнее
                     </span>
-                    <ChevronRight size={14} style={{ color: 'var(--app-icon-muted)' }} />
+                    <ArrowUpRight size={15} style={{ color: 'var(--app-icon-muted)' }} />
                   </div>
                 </div>
               </motion.div>
@@ -514,8 +530,6 @@ export const ClubsPage: React.FC = () => {
           <ClubDetail
             club={selectedClub}
             onClose={() => setSelectedClub(null)}
-            onJoin={handleJoin}
-            isJoined={joinedIds.has(selectedClub.id)}
           />
         )}
       </AnimatePresence>
