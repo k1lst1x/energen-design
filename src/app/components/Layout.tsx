@@ -67,7 +67,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, showBack, fullscreen }
                   src={theme === 'light' ? logoBlack : logoMint}
                   alt="Energo University"
                   className="app-logo"
-                  style={{ height: 61, width: 'auto' }}
+                  style={{ height: 54, width: 'auto' }}
                 />
               </Link>
             </div>

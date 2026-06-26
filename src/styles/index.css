@@ -2396,23 +2396,30 @@ select {
 }
 
 .home-container {
+  --home-container-padding-y: clamp(1rem, 2vh, 1.25rem);
   max-width: min(100vw, 1920px) !important;
 }
 
 .home-hero-stage {
   position: relative;
-  min-height: max(54rem, calc(100vh - 5rem));
-  margin-bottom: 2rem;
+  min-height: min(54rem, calc(100dvh - 4.0625rem - (var(--home-container-padding-y) * 2)));
+  margin-bottom: 0;
   --home-robot-offset-y: clamp(-1.25rem, -2vh, -0.5rem);
   --home-robot-height: clamp(27rem, 60vh, 39rem);
   --home-robot-gap: clamp(0.5rem, 1vh, 1rem);
   --home-title-top: calc(var(--home-robot-offset-y) + var(--home-robot-height) + var(--home-robot-gap));
   --home-card-width: 17.25rem;
-  --home-card-height: 9.25rem;
+  --home-card-height: 10.25rem;
+  --home-card-padding: 1.2rem 2.35rem 1.2rem 1.2rem;
+  --home-card-icon-size: 2.625rem;
+  --home-card-icon-gap: 0.75rem;
+  --home-card-title-size: 1rem;
+  --home-card-desc-size: 0.92rem;
+  --home-card-desc-line-height: 1.42;
   --home-card-inner-x: clamp(4rem, calc(50% - 43.5rem), 18rem);
   --home-card-outer-x: clamp(1.25rem, calc(50% - 53.75rem), 6rem);
-  --home-card-row-gap: clamp(2rem, 3.4vh, 2.75rem);
-  --home-card-row-1: clamp(3rem, 5vh, 4.25rem);
+  --home-card-row-gap: clamp(1.55rem, 2.7vh, 2rem);
+  --home-card-row-1: clamp(2.25rem, 4vh, 3rem);
   --home-card-row-step: calc(var(--home-card-height) + var(--home-card-row-gap));
   --home-card-row-2: calc(var(--home-card-row-1) + var(--home-card-row-step));
   --home-card-row-3: calc(var(--home-card-row-2) + var(--home-card-row-step));
@@ -2503,11 +2510,37 @@ select {
 
 .hero-action-card {
   position: absolute !important;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   pointer-events: auto;
   width: var(--home-card-width);
   height: var(--home-card-height);
   min-height: var(--home-card-height);
+  box-sizing: border-box;
   box-shadow: 0 16px 45px var(--app-shadow);
+}
+
+.hero-action-card-icon {
+  flex: 0 0 auto;
+}
+
+.hero-action-card-copy {
+  min-width: 0;
+  width: 100%;
+}
+
+.hero-action-card-title,
+.hero-action-card-description {
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+.hero-action-card-description {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .hero-action-card-1 {
@@ -2551,9 +2584,14 @@ select {
 }
 
 @media (max-width: 1180px) {
+  .home-container {
+    --home-container-padding-y: 3rem;
+  }
+
   .home-hero-stage {
     min-height: auto;
     margin-bottom: 3rem;
+    --home-card-padding: 1.15rem 2.25rem 1.15rem 1.15rem;
   }
 
   .home-robot-shell {
@@ -2582,8 +2620,15 @@ select {
     position: relative !important;
     inset: auto !important;
     width: auto !important;
-    min-height: 8.75rem;
+    height: auto !important;
+    min-height: 9.5rem;
     box-shadow: none;
+  }
+
+  .hero-action-card-description {
+    display: block;
+    overflow: visible;
+    -webkit-line-clamp: unset;
   }
 }
 
@@ -2932,6 +2977,7 @@ select {
   }
 
   .home-container {
+    --home-container-padding-y: 3rem;
     max-width: calc(100vw - 2rem) !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
@@ -2950,12 +2996,13 @@ select {
   }
 
   .home-title {
-    max-width: calc(100vw - 2rem) !important;
-    font-size: clamp(1.55rem, 7.2vw, 1.85rem) !important;
+    max-width: min(21rem, calc(100vw - 2rem)) !important;
+    font-size: 1.55rem !important;
     line-height: 1.15 !important;
     white-space: normal !important;
     overflow-wrap: normal !important;
     word-break: normal !important;
+    text-wrap: balance;
   }
 
   .home-subtitle {
@@ -2965,26 +3012,30 @@ select {
   }
 
   .home-floating-actions .quick-actions-grid {
+    gap: 0.75rem !important;
     grid-template-columns: 1fr !important;
   }
 
   .hero-action-card {
-    min-height: 7.5rem !important;
-    padding: 1rem !important;
+    min-height: 8.75rem !important;
+    padding: var(--home-card-padding) !important;
   }
 
   .hero-action-card > div:first-child {
-    width: 40px !important;
-    height: 40px !important;
-    margin-bottom: 0.625rem !important;
+    width: var(--home-card-icon-size) !important;
+    height: var(--home-card-icon-size) !important;
+    margin-bottom: var(--home-card-icon-gap) !important;
   }
 
   .home-mode-actions {
     gap: 0.75rem !important;
+    max-width: min(100%, 20.5rem);
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .home-mode-button {
-    width: min(100%, 22rem);
+    width: 100%;
     min-height: 58px;
     justify-content: center;
     padding: 0.75rem 1rem !important;
@@ -2992,6 +3043,7 @@ select {
 
   .home-floating-actions {
     display: none !important;
+    margin-top: 2rem;
   }
 
   .chat-shell {

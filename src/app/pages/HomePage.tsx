@@ -28,7 +28,10 @@ export const HomePage: React.FC = () => {
     <Layout>
       <div
         className="home-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
-        style={{ paddingTop: '3rem', paddingBottom: '4rem' }}
+        style={{
+          paddingTop: 'var(--home-container-padding-y)',
+          paddingBottom: 'var(--home-container-padding-y)',
+        }}
       >
         {/* Hero Section */}
         <div className="home-hero-stage">
@@ -210,7 +213,7 @@ export const HomePage: React.FC = () => {
                     background: 'var(--app-card)',
                     border: '1px solid var(--app-border)',
                     borderRadius: 16,
-                    padding: '1.25rem',
+                    padding: 'var(--home-card-padding)',
                     cursor: 'pointer',
                     position: 'relative',
                     overflow: 'hidden',
@@ -230,16 +233,17 @@ export const HomePage: React.FC = () => {
                 >
                   {/* Icon */}
                   <div
+                    className="hero-action-card-icon"
                     style={{
-                      width: 44,
-                      height: 44,
+                      width: 'var(--home-card-icon-size)',
+                      height: 'var(--home-card-icon-size)',
                       borderRadius: 12,
                       background: card.bg,
                       border: `1px solid ${card.color}30`,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      marginBottom: '0.875rem',
+                      marginBottom: 'var(--home-card-icon-gap)',
                     }}
                   >
                     <Icon size={22} style={{ color: card.color }} />
@@ -247,24 +251,30 @@ export const HomePage: React.FC = () => {
 
                   {/* Text */}
                   <div
-                    style={{
-                      fontSize: '1.06rem',
-                      fontWeight: 700,
-                      color: 'var(--app-text-strong)',
-                      lineHeight: 1.25,
-                      marginBottom: '0.4rem',
-                    }}
+                    className="hero-action-card-copy"
                   >
-                    {t(card.key)}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: '0.95rem',
-                      color: 'var(--app-text-soft)',
-                      lineHeight: 1.45,
-                    }}
-                  >
-                    {t(descKey)}
+                    <div
+                      className="hero-action-card-title"
+                      style={{
+                        fontSize: 'var(--home-card-title-size)',
+                        fontWeight: 700,
+                        color: 'var(--app-text-strong)',
+                        lineHeight: 1.25,
+                        marginBottom: '0.35rem',
+                      }}
+                    >
+                      {t(card.key)}
+                    </div>
+                    <div
+                      className="hero-action-card-description"
+                      style={{
+                        fontSize: 'var(--home-card-desc-size)',
+                        color: 'var(--app-text-soft)',
+                        lineHeight: 'var(--home-card-desc-line-height)',
+                      }}
+                    >
+                      {t(descKey)}
+                    </div>
                   </div>
 
                   {/* Arrow */}
