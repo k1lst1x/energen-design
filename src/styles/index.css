@@ -2409,7 +2409,8 @@ select {
   --home-title-top: calc(var(--home-robot-offset-y) + var(--home-robot-height) + var(--home-robot-gap));
   --home-card-width: 17.25rem;
   --home-card-height: 9.25rem;
-  --home-card-edge-x: clamp(4rem, calc(50% - 43.5rem), 18rem);
+  --home-card-inner-x: clamp(4rem, calc(50% - 43.5rem), 18rem);
+  --home-card-outer-x: clamp(1.25rem, calc(50% - 53.75rem), 6rem);
   --home-card-row-gap: clamp(2rem, 3.4vh, 2.75rem);
   --home-card-row-1: clamp(3rem, 5vh, 4.25rem);
   --home-card-row-step: calc(var(--home-card-height) + var(--home-card-row-gap));
@@ -2510,42 +2511,42 @@ select {
 }
 
 .hero-action-card-1 {
-  left: var(--home-card-edge-x);
+  left: var(--home-card-inner-x);
   top: var(--home-card-row-1);
 }
 
 .hero-action-card-2 {
-  left: var(--home-card-edge-x);
+  left: var(--home-card-outer-x);
   top: var(--home-card-row-2);
 }
 
 .hero-action-card-3 {
-  left: var(--home-card-edge-x);
+  left: var(--home-card-outer-x);
   top: var(--home-card-row-3);
 }
 
 .hero-action-card-4 {
-  left: var(--home-card-edge-x);
+  left: var(--home-card-inner-x);
   top: var(--home-card-row-4);
 }
 
 .hero-action-card-5 {
-  right: var(--home-card-edge-x);
+  right: var(--home-card-inner-x);
   top: var(--home-card-row-1);
 }
 
 .hero-action-card-6 {
-  right: var(--home-card-edge-x);
+  right: var(--home-card-outer-x);
   top: var(--home-card-row-2);
 }
 
 .hero-action-card-7 {
-  right: var(--home-card-edge-x);
+  right: var(--home-card-outer-x);
   top: var(--home-card-row-3);
 }
 
 .hero-action-card-8 {
-  right: var(--home-card-edge-x);
+  right: var(--home-card-inner-x);
   top: var(--home-card-row-4);
 }
 
