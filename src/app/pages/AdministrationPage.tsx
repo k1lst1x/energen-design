@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { Layout } from '../components/Layout';
 
-const leaders = [
+export const leaders = [
   {
     id: 1,
     name: 'Тулеубеков Ерлан Сагатович',
@@ -15,6 +15,8 @@ const leaders = [
     department: 'Академический блок',
     room: 'A-214, главный корпус',
     email: 'academic@aues.kz',
+    photo: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?crop=faces&fit=crop&w=900&q=80',
+    biography: 'Ерлан Сагатович возглавляет академическую работу университета и отвечает за развитие образовательных программ, качество обучения и академическую политику. За годы работы он сформировал сильную культуру поддержки студентов и преподавателей, а также внедрил новые подходы к индивидуальному образовательному маршруту.',
     questions: ['Образовательные программы', 'Академическая политика', 'Апелляции', 'Индивидуальный план'],
     slots: ['Пн 14:00', 'Ср 10:30', 'Пт 15:00'],
     color: '#7FB8A0',
@@ -26,6 +28,8 @@ const leaders = [
     department: 'ДИТ',
     room: 'A-315, главный корпус',
     email: 'digital@aues.kz',
+    photo: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?crop=faces&fit=crop&w=900&q=80',
+    biography: 'Лаура Кайратовна курирует цифровую трансформацию университета, развивает внутренние сервисы и делает технологии удобными для студентов и сотрудников. Её направление объединяет внедрение новых цифровых решений, сервисную поддержку и работу с образовательными платформами.',
     questions: ['Цифровые сервисы', 'Доступы', 'Интеграции', 'Технические обращения'],
     slots: ['Вт 11:00', 'Чт 16:00'],
     color: '#7EC8E3',
@@ -37,6 +41,8 @@ const leaders = [
     department: 'ФЦТ',
     room: 'B-205, корпус B',
     email: 'fit@aues.kz',
+    photo: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?crop=faces&fit=crop&w=900&q=80',
+    biography: 'Арман Нурланович отвечает за развитие факультета цифровых технологий и создание современной образовательной среды для будущих специалистов. Под его руководством формируются сильные академические сообщества, поддерживаются проекты и развиваются практико-ориентированные программы.',
     questions: ['Перевод', 'Восстановление', 'Академическая справка', 'Дисциплинарные вопросы'],
     slots: ['Пн 10:00', 'Ср 14:30', 'Чт 12:00'],
     color: '#9B7EC8',
@@ -131,7 +137,7 @@ export const AdministrationPage: React.FC = () => {
               boxShadow: '0 18px 46px var(--app-shadow)',
             }}
           >
-            <div className="flex items-start justify-between gap-4 flex-wrap" style={{ marginBottom: '1.25rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 220px', gap: '1rem', marginBottom: '1.25rem' }}>
               <div>
                 <div style={{ color: selected.color, fontWeight: 800, marginBottom: 8 }}>{selected.department}</div>
                 <h2 style={{ color: 'var(--app-text-strong)', fontSize: '1.55rem', fontWeight: 850, lineHeight: 1.15 }}>
@@ -141,21 +147,32 @@ export const AdministrationPage: React.FC = () => {
                   <span className="flex items-center gap-1"><MapPin size={16} /> {selected.room}</span>
                   <span className="flex items-center gap-1"><Mail size={16} /> {selected.email}</span>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => navigate('/appointment')}
+                  style={{
+                    background: 'linear-gradient(135deg, var(--brand-mint), var(--brand-mint-strong))',
+                    color: '#0F0F0F',
+                    border: 0,
+                    borderRadius: 999,
+                    padding: '0.9rem 1.15rem',
+                    fontWeight: 850,
+                    marginTop: '1rem',
+                  }}
+                >
+                  Записаться на приём
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => navigate('/appointment')}
-                style={{
-                  background: 'linear-gradient(135deg, var(--brand-mint), var(--brand-mint-strong))',
-                  color: '#0F0F0F',
-                  border: 0,
-                  borderRadius: 999,
-                  padding: '0.9rem 1.15rem',
-                  fontWeight: 850,
-                }}
-              >
-                Записаться на приём
-              </button>
+              <img
+                src={selected.photo}
+                alt={selected.name}
+                style={{ width: '100%', height: 260, objectFit: 'cover', borderRadius: 20, border: '1px solid var(--app-border)' }}
+              />
+            </div>
+
+            <div style={{ background: 'var(--app-bg-soft)', border: '1px solid var(--app-border)', borderRadius: 16, padding: '1rem', marginBottom: '1.25rem' }}>
+              <h3 style={{ color: 'var(--app-text-strong)', fontWeight: 850, marginBottom: 10 }}>Биография</h3>
+              <p style={{ color: 'var(--app-text-muted)', lineHeight: 1.7, margin: 0 }}>{selected.biography}</p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-4" style={{ marginBottom: '1.5rem' }}>

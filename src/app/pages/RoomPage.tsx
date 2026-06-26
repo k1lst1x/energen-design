@@ -8,9 +8,9 @@ import { useNavigate, useSearchParams } from 'react-router';
 import { Layout } from '../components/Layout';
 import { useLanguage } from '../context/LanguageContext';
 
-type RoomType = 'Учебная аудитория' | 'Отдел' | 'Деканат' | 'Сервис';
+export type RoomType = 'Учебная аудитория' | 'Отдел' | 'Деканат' | 'Сервис';
 
-interface RoomEntry {
+export interface RoomEntry {
   id: number;
   number: string;
   title: string;
@@ -28,7 +28,7 @@ interface RoomEntry {
   color: string;
 }
 
-const rooms: RoomEntry[] = [
+export const rooms: RoomEntry[] = [
   {
     id: 1,
     number: 'A-301',
@@ -156,7 +156,7 @@ const rooms: RoomEntry[] = [
   },
 ];
 
-const typeFilters: Array<'Все' | RoomType> = ['Все', 'Учебная аудитория', 'Отдел', 'Деканат', 'Сервис'];
+export const typeFilters: Array<'Все' | RoomType> = ['Все', 'Учебная аудитория', 'Отдел', 'Деканат', 'Сервис'];
 
 export const RoomPage: React.FC = () => {
   const [searchParams] = useSearchParams();

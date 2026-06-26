@@ -4,7 +4,7 @@ import { Bus, Car, Check, Clock, Copy, ExternalLink, MapPin, Navigation, Phone, 
 import { Layout } from '../components/Layout';
 import { useLanguage } from '../context/LanguageContext';
 
-const transportOptions = [
+export const transportOptions = [
   {
     icon: Bus,
     title: 'Автобус',
@@ -38,13 +38,13 @@ const transportOptions = [
   },
 ];
 
-const hours = [
+export const hours = [
   { day: 'Понедельник – Пятница', time: '8:00 – 20:00' },
   { day: 'Суббота', time: '9:00 – 17:00' },
   { day: 'Воскресенье', time: 'Закрыто' },
 ];
 
-const contacts = [
+export const contacts = [
   { label: 'Приёмная комиссия', value: '+7 (727) 292-07-60' },
   { label: 'Охрана и пропуск', value: '+7 (727) 292-07-70' },
   { label: 'Email', value: 'info@aues.kz' },

@@ -9,10 +9,10 @@ import { useNavigate } from 'react-router';
 import { Layout } from '../components/Layout';
 import { useLanguage } from '../context/LanguageContext';
 
-type StaffCategory = 'ППС' | 'АУП' | 'Деканат' | 'Сервис';
-type Presence = 'На месте' | 'На занятии' | 'Приём по записи' | 'Нет на месте' | 'По расписанию';
+export type StaffCategory = 'ППС' | 'АУП' | 'Деканат' | 'Сервис';
+export type Presence = 'На месте' | 'На занятии' | 'Приём по записи' | 'Нет на месте' | 'По расписанию';
 
-interface StaffMember {
+export interface StaffMember {
   id: number;
   name: string;
   role: string;
@@ -33,7 +33,7 @@ interface StaffMember {
   schedule: { day: string; time: string; status: 'Свободно' | 'Занято' }[];
 }
 
-const staff: StaffMember[] = [
+export const staff: StaffMember[] = [
   {
     id: 1,
     name: 'Нурланов Бауыржан Ерланович',
@@ -156,16 +156,16 @@ const staff: StaffMember[] = [
   },
 ];
 
-const categories: Array<'Все' | StaffCategory> = ['Все', 'ППС', 'Деканат', 'АУП', 'Сервис'];
+export const categories: Array<'Все' | StaffCategory> = ['Все', 'ППС', 'Деканат', 'АУП', 'Сервис'];
 
-const categoryIcons: Record<StaffCategory, React.ElementType> = {
+export const categoryIcons: Record<StaffCategory, React.ElementType> = {
   'ППС': GraduationCap,
   'АУП': ShieldCheck,
   'Деканат': Star,
   'Сервис': Users,
 };
 
-const presenceColors: Record<string, string> = {
+export const presenceColors: Record<string, string> = {
   'На месте': '#7FB8A0',
   'На занятии': '#7EC8E3',
   'Приём по записи': '#9B7EC8',

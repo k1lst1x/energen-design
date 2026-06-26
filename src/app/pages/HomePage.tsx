@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { motion } from 'motion/react';
 import {
   Mic, MessageSquare, DoorOpen, Users, Building2, CalendarDays,
@@ -23,6 +23,8 @@ const quickCards = [
 export const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const location = useLocation();
+  const isHall = location.pathname === '/hall';
 
   return (
     <Layout>
@@ -89,92 +91,94 @@ export const HomePage: React.FC = () => {
           </motion.div>
 
           {/* Mode selection */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.5 }}
-            className="home-mode-actions flex w-full flex-col sm:flex-row gap-4 items-center justify-center"
-          >
-            <button
-              onClick={() => navigate('/voice')}
-              className="home-mode-button group flex items-center gap-3 transition-all duration-300"
-              style={{
-                background: 'linear-gradient(135deg, var(--brand-mint), var(--brand-mint-strong))',
-                color: '#0F0F0F',
-                padding: '1rem 2rem',
-                borderRadius: '3rem',
-                fontWeight: 700,
-                fontSize: '1rem',
-                border: 'none',
-                cursor: 'pointer',
-                boxShadow: '0 0 30px rgba(var(--brand-mint-rgb),0.3), 0 4px 20px rgba(var(--brand-mint-rgb),0.2)',
-                minWidth: 200,
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
-                e.currentTarget.style.boxShadow = '0 0 50px rgba(var(--brand-mint-rgb),0.5), 0 8px 30px rgba(var(--brand-mint-rgb),0.3)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.boxShadow = '0 0 30px rgba(var(--brand-mint-rgb),0.3), 0 4px 20px rgba(var(--brand-mint-rgb),0.2)';
-              }}
+          {!isHall && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+              className="home-mode-actions flex w-full flex-col sm:flex-row gap-4 items-center justify-center"
             >
-              <div
+              <button
+                onClick={() => navigate('/voice')}
+                className="home-mode-button group flex items-center gap-3 transition-all duration-300"
                 style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: '50%',
-                  background: 'var(--app-cta-icon-bg)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  background: 'linear-gradient(135deg, var(--brand-mint), var(--brand-mint-strong))',
+                  color: '#0F0F0F',
+                  padding: '1rem 2rem',
+                  borderRadius: '3rem',
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  border: 'none',
+                  cursor: 'pointer',
+                  boxShadow: '0 0 30px rgba(var(--brand-mint-rgb),0.3), 0 4px 20px rgba(var(--brand-mint-rgb),0.2)',
+                  minWidth: 200,
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+                  e.currentTarget.style.boxShadow = '0 0 50px rgba(var(--brand-mint-rgb),0.5), 0 8px 30px rgba(var(--brand-mint-rgb),0.3)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  e.currentTarget.style.boxShadow = '0 0 30px rgba(var(--brand-mint-rgb),0.3), 0 4px 20px rgba(var(--brand-mint-rgb),0.2)';
                 }}
               >
-                <Mic size={18} />
-              </div>
-              {t('voiceMode')}
-            </button>
+                <div
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: '50%',
+                    background: 'var(--app-cta-icon-bg)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Mic size={18} />
+                </div>
+                {t('voiceMode')}
+              </button>
 
-            <button
-              onClick={() => navigate('/chat')}
-              className="home-mode-button group flex items-center gap-3 transition-all duration-300"
-              style={{
-                background: 'linear-gradient(135deg, var(--brand-mint), var(--brand-mint-strong))',
-                color: '#0F0F0F',
-                padding: '1rem 2rem',
-                borderRadius: '3rem',
-                fontWeight: 700,
-                fontSize: '1rem',
-                border: 'none',
-                cursor: 'pointer',
-                boxShadow: '0 0 30px rgba(var(--brand-mint-rgb),0.3), 0 4px 20px rgba(var(--brand-mint-rgb),0.2)',
-                minWidth: 200,
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
-                e.currentTarget.style.boxShadow = '0 0 50px rgba(var(--brand-mint-rgb),0.5), 0 8px 30px rgba(var(--brand-mint-rgb),0.3)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                e.currentTarget.style.boxShadow = '0 0 30px rgba(var(--brand-mint-rgb),0.3), 0 4px 20px rgba(var(--brand-mint-rgb),0.2)';
-              }}
-            >
-              <div
+              <button
+                onClick={() => navigate('/chat')}
+                className="home-mode-button group flex items-center gap-3 transition-all duration-300"
                 style={{
-                  width: 36,
-                  height: 36,
-                  borderRadius: '50%',
-                  background: 'var(--app-cta-icon-bg)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  background: 'linear-gradient(135deg, var(--brand-mint), var(--brand-mint-strong))',
+                  color: '#0F0F0F',
+                  padding: '1rem 2rem',
+                  borderRadius: '3rem',
+                  fontWeight: 700,
+                  fontSize: '1rem',
+                  border: 'none',
+                  cursor: 'pointer',
+                  boxShadow: '0 0 30px rgba(var(--brand-mint-rgb),0.3), 0 4px 20px rgba(var(--brand-mint-rgb),0.2)',
+                  minWidth: 200,
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
+                  e.currentTarget.style.boxShadow = '0 0 50px rgba(var(--brand-mint-rgb),0.5), 0 8px 30px rgba(var(--brand-mint-rgb),0.3)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = 'translateY(0) scale(1)';
+                  e.currentTarget.style.boxShadow = '0 0 30px rgba(var(--brand-mint-rgb),0.3), 0 4px 20px rgba(var(--brand-mint-rgb),0.2)';
                 }}
               >
-                <MessageSquare size={18} />
-              </div>
-              {t('textChat')}
-            </button>
-          </motion.div>
+                <div
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: '50%',
+                    background: 'var(--app-cta-icon-bg)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <MessageSquare size={18} />
+                </div>
+                {t('textChat')}
+              </button>
+            </motion.div>
+          )}
           </div>
         </div>
 

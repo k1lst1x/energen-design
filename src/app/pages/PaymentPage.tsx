@@ -4,7 +4,7 @@ import { CreditCard, Building, Home, Wrench, Download, Copy, Check, QrCode, Chev
 import { Layout } from '../components/Layout';
 import { useLanguage } from '../context/LanguageContext';
 
-const paymentCategories = [
+export const paymentCategories = [
   {
     id: 'tuition',
     title: 'Оплата обучения',
@@ -64,7 +64,7 @@ const paymentCategories = [
   },
 ];
 
-const QRPlaceholder: React.FC<{ label: string; color: string }> = ({ label, color }) => {
+export const QRPlaceholder: React.FC<{ label: string; color: string }> = ({ label, color }) => {
   // Pre-computed dot pattern for consistent rendering
   const dotPattern = [1,0,1,0,1,1,0,1,0,1,1,0,0,1,0,1,1,0,1,0,0,1,1,0,1];
   return (

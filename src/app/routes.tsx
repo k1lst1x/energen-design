@@ -13,6 +13,17 @@ import { ProgramsPage } from './pages/ProgramsPage';
 import { AlumniPage } from './pages/AlumniPage';
 import { AdministrationPage } from './pages/AdministrationPage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import {
+  HallAdministrationPage,
+  HallClubsPage,
+  HallDirectionsPage,
+  HallEmployeePage,
+  HallEventsPage,
+  HallHomePage,
+  HallPaymentsPage,
+  HallProgramsPage,
+  HallRoomPage,
+} from './pages/HallPages';
 
 export const router = createHashRouter([
   { path: '/', Component: HomePage },
@@ -28,5 +39,14 @@ export const router = createHashRouter([
   { path: '/alumni', Component: AlumniPage },
   { path: '/payments', Component: PaymentPage },
   { path: '/directions', Component: DirectionsPage },
+  { path: '/hall', Component: HomePage },
+  { path: '/hall/room', Component: HallRoomPage },
+  { path: '/hall/employee', Component: HallEmployeePage },
+  { path: '/hall/administration', Component: HallAdministrationPage },
+  { path: '/hall/events', Component: HallEventsPage },
+  { path: '/hall/clubs', Component: HallClubsPage },
+  { path: '/hall/programs', Component: HallProgramsPage },
+  { path: '/hall/payments', Component: HallPaymentsPage },
+  { path: '/hall/directions', Component: HallDirectionsPage },
   { path: '*', Component: NotFoundPage },
 ]);

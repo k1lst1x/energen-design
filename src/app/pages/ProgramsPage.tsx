@@ -15,7 +15,7 @@ const energyPhoto = 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1
 const automationPhoto = 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1000&q=80';
 const telecomPhoto = 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1000&q=80';
 
-const programs = [
+export const programs = [
   {
     id: 1,
     code: '6B06102',
@@ -126,7 +126,7 @@ const programs = [
   },
 ];
 
-const filters = ['Все', 'Математика + Информатика', 'Математика + Физика'];
+export const filters = ['Все', 'Математика + Информатика', 'Математика + Физика'];
 
 export const ProgramsPage: React.FC = () => {
   const navigate = useNavigate();

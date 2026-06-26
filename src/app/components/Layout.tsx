@@ -76,19 +76,21 @@ export const Layout: React.FC<LayoutProps> = ({ children, showBack, fullscreen }
             <div className="app-actions flex items-center gap-3">
               {/* Desktop nav */}
               <nav className="hidden md:flex items-center gap-1">
-                <Link
-                  to="/"
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-all duration-200"
-                  style={{
-                    color: isHome ? 'var(--brand-mint-strong)' : 'var(--app-text-muted)',
-                    background: isHome ? 'var(--app-nav-active)' : 'transparent',
-                  }}
-                  onMouseEnter={e => { if (!isHome) e.currentTarget.style.color = 'var(--app-text-strong)'; }}
-                  onMouseLeave={e => { if (!isHome) e.currentTarget.style.color = 'var(--app-text-muted)'; }}
-                >
-                  <Home size={15} />
-                  <span>{t('home')}</span>
-                </Link>
+                {location.pathname !== '/hall' && (
+                  <Link
+                    to="/"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-all duration-200"
+                    style={{
+                      color: isHome ? 'var(--brand-mint-strong)' : 'var(--app-text-muted)',
+                      background: isHome ? 'var(--app-nav-active)' : 'transparent',
+                    }}
+                    onMouseEnter={e => { if (!isHome) e.currentTarget.style.color = 'var(--app-text-strong)'; }}
+                    onMouseLeave={e => { if (!isHome) e.currentTarget.style.color = 'var(--app-text-muted)'; }}
+                  >
+                    <Home size={15} />
+                    <span>{t('home')}</span>
+                  </Link>
+                )}
               </nav>
 
               {/* Theme switcher */}
@@ -218,17 +220,19 @@ export const Layout: React.FC<LayoutProps> = ({ children, showBack, fullscreen }
               className="mobile-navigation md:hidden pb-3 pt-3 flex flex-col gap-1"
               style={{ borderTop: '1px solid var(--app-border-strong)', marginTop: 0 }}
             >
-              <Link
-                to="/"
-                onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm"
-                style={{
-                  color: isHome ? 'var(--brand-mint-strong)' : 'var(--app-text-muted)',
-                  background: isHome ? 'var(--app-nav-active)' : 'transparent',
-                }}
-              >
-                <Home size={16} /> {t('home')}
-              </Link>
+              {location.pathname !== '/hall' && (
+                <Link
+                  to="/"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm"
+                  style={{
+                    color: isHome ? 'var(--brand-mint-strong)' : 'var(--app-text-muted)',
+                    background: isHome ? 'var(--app-nav-active)' : 'transparent',
+                  }}
+                >
+                  <Home size={16} /> {t('home')}
+                </Link>
+              )}
               <div className="mobile-actions-menu" aria-label="Разделы Energen">
                 {menuActions.map(action => {
                   const Icon = action.icon;
