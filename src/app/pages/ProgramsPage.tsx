@@ -2,10 +2,18 @@ import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 import {
-  BriefcaseBusiness, BookOpen, CheckCircle2, ChevronRight, GraduationCap,
-  Languages, Search, SlidersHorizontal, Trophy, Users
+  BriefcaseBusiness, BookOpen, Building2, Camera, CheckCircle2, ChevronRight,
+  DoorOpen, GraduationCap, Languages, MapPin, Navigation, Search,
+  SlidersHorizontal, Trophy, Users
 } from 'lucide-react';
 import { Layout } from '../components/Layout';
+
+const programPhoto1 = 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1000&q=80';
+const programPhoto2 = 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1000&q=80';
+const programPhoto3 = 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1000&q=80';
+const energyPhoto = 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1000&q=80';
+const automationPhoto = 'https://images.unsplash.com/photo-1581092921461-eab62e97a780?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1000&q=80';
+const telecomPhoto = 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1000&q=80';
 
 const programs = [
   {
@@ -23,6 +31,16 @@ const programs = [
     goal: 'Подготовить специалистов, которые умеют проектировать полезные цифровые продукты для бизнеса, образования и промышленности.',
     careers: ['Backend/Frontend разработчик', 'Системный аналитик', 'Data engineer', 'Product analyst'],
     contact: 'Приёмная комиссия, каб. А-105',
+    institute: 'Институт цифровых технологий',
+    department: 'Кафедра информационных технологий',
+    consultationRoom: 'A-105',
+    consultationLabel: 'Приёмная комиссия',
+    location: 'Главный корпус, 1 этаж',
+    gallery: [
+      { label: 'Лаборатория', url: programPhoto1 },
+      { label: 'Кафедра', url: programPhoto2 },
+      { label: 'Консультация', url: programPhoto3 },
+    ],
     color: '#7FB8A0',
   },
   {
@@ -40,6 +58,16 @@ const programs = [
     goal: 'Подготовить инженеров для энергосистем, электростанций, сетевых компаний и промышленных предприятий.',
     careers: ['Инженер-энергетик', 'Проектировщик сетей', 'Диспетчер энергосистем', 'Специалист АСУ ТП'],
     contact: 'Кафедра электроэнергетики, каб. Б-318',
+    institute: 'Институт энергетики',
+    department: 'Кафедра электроэнергетики',
+    consultationRoom: 'A-105',
+    consultationLabel: 'Приёмная комиссия',
+    location: 'Главный корпус, 1 этаж',
+    gallery: [
+      { label: 'Энергетика', url: energyPhoto },
+      { label: 'Лаборатория', url: automationPhoto },
+      { label: 'Приёмная', url: programPhoto3 },
+    ],
     color: '#F7DC6F',
   },
   {
@@ -57,6 +85,16 @@ const programs = [
     goal: 'Научить проектировать автоматизированные решения для энергетики, производства и городской инфраструктуры.',
     careers: ['Automation engineer', 'PLC developer', 'Robotics engineer', 'Инженер КИПиА'],
     contact: 'Кафедра автоматики, каб. А-411',
+    institute: 'Институт автоматики и управления',
+    department: 'Кафедра автоматизации',
+    consultationRoom: 'A-105',
+    consultationLabel: 'Приёмная комиссия',
+    location: 'Главный корпус, 1 этаж',
+    gallery: [
+      { label: 'Автоматизация', url: automationPhoto },
+      { label: 'Проекты', url: programPhoto1 },
+      { label: 'Кафедра', url: programPhoto2 },
+    ],
     color: '#7EC8E3',
   },
   {
@@ -74,6 +112,16 @@ const programs = [
     goal: 'Подготовить инженеров для телеком-операторов, сетевой инфраструктуры и электронных систем.',
     careers: ['Network engineer', 'RF engineer', 'IoT specialist', 'Инженер связи'],
     contact: 'Кафедра телекоммуникаций, каб. В-207',
+    institute: 'Институт телекоммуникаций',
+    department: 'Кафедра радиотехники и связи',
+    consultationRoom: 'A-105',
+    consultationLabel: 'Приёмная комиссия',
+    location: 'Главный корпус, 1 этаж',
+    gallery: [
+      { label: 'Сети', url: telecomPhoto },
+      { label: 'Лаборатория', url: programPhoto1 },
+      { label: 'Приёмная', url: programPhoto3 },
+    ],
     color: '#9B7EC8',
   },
 ];
@@ -85,6 +133,7 @@ export const ProgramsPage: React.FC = () => {
   const [query, setQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('Все');
   const [selectedId, setSelectedId] = useState(programs[0].id);
+  const [activePhoto, setActivePhoto] = useState(0);
 
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -102,20 +151,23 @@ export const ProgramsPage: React.FC = () => {
   }, [activeFilter, query]);
 
   const selected = programs.find(program => program.id === selectedId) ?? programs[0];
+  const currentPhoto = selected.gallery[Math.min(activePhoto, selected.gallery.length - 1)];
+
+  const chooseProgram = (programId: number) => {
+    setSelectedId(programId);
+    setActivePhoto(0);
+  };
 
   return (
     <Layout title="Образовательные программы" showBack>
-      <div className="page-content max-w-6xl mx-auto px-4 sm:px-6" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
+      <div className="programs-page page-content mx-auto px-4 sm:px-6" style={{ paddingTop: '1.15rem', paddingBottom: '3rem' }}>
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: '1.5rem' }}>
           <h1 style={{ color: 'var(--app-text-strong)', fontWeight: 800, fontSize: '1.9rem', marginBottom: 8 }}>
             Специальности и образовательные программы
           </h1>
-          <p style={{ color: 'var(--app-text-muted)', fontSize: '0.95rem', maxWidth: 760, lineHeight: 1.6 }}>
-            По ТЗ этот раздел показывает название ОП, комбинацию ЕНТ, языки обучения, уровень, проходной балл на грант, ECTS, цели и карьерные траектории.
-          </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-[360px_1fr] gap-5">
+        <div className="programs-workspace grid lg:grid-cols-[340px_minmax(0,1fr)] gap-6">
           <div>
             <div
               className="flex items-center gap-2"
@@ -170,7 +222,7 @@ export const ProgramsPage: React.FC = () => {
                 <button
                   key={program.id}
                   type="button"
-                  onClick={() => setSelectedId(program.id)}
+                  onClick={() => chooseProgram(program.id)}
                   className="text-left transition-all duration-200"
                   style={{
                     background: selected.id === program.id ? 'var(--app-surface-hover)' : 'var(--app-card)',
@@ -200,7 +252,7 @@ export const ProgramsPage: React.FC = () => {
           </div>
 
           <motion.section
-            className="directory-detail detail-content"
+            className="program-detail directory-detail detail-content"
             key={selected.id}
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
@@ -208,10 +260,37 @@ export const ProgramsPage: React.FC = () => {
               background: 'var(--app-card)',
               border: '1px solid var(--app-border)',
               borderRadius: 18,
-              padding: '1.5rem',
+              padding: '1.35rem',
               boxShadow: '0 18px 46px var(--app-shadow)',
             }}
           >
+            <div className="program-gallery-card" style={{ borderColor: `${selected.color}32` }}>
+              <div className="program-gallery-image">
+                <img src={currentPhoto.url} alt={selected.name} />
+                <div className="program-gallery-overlay" />
+                <div className="program-photo-label">
+                  <Camera size={16} />
+                  {currentPhoto.label}
+                </div>
+              </div>
+              <div className="program-thumbs">
+                {selected.gallery.map((photo, index) => (
+                  <button
+                    key={photo.url}
+                    type="button"
+                    onClick={() => setActivePhoto(index)}
+                    className="program-thumb"
+                    style={{
+                      borderColor: index === activePhoto ? selected.color : 'var(--app-border)',
+                      opacity: index === activePhoto ? 1 : 0.68,
+                    }}
+                  >
+                    <img src={photo.url} alt="" />
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="flex items-start justify-between gap-4 flex-wrap" style={{ marginBottom: '1.25rem' }}>
               <div>
                 <div style={{ color: selected.color, fontWeight: 800, marginBottom: 8 }}>{selected.code}</div>
@@ -271,6 +350,34 @@ export const ProgramsPage: React.FC = () => {
                   ))}
                 </div>
               </div>
+            </div>
+
+            <div className="program-location-grid">
+              <div className="program-location-card" style={{ borderColor: `${selected.color}32` }}>
+                <Building2 size={19} style={{ color: selected.color }} />
+                <span>Институт</span>
+                <strong>{selected.institute}</strong>
+                <p>{selected.department}</p>
+              </div>
+              <div className="program-location-card" style={{ borderColor: `${selected.color}32` }}>
+                <MapPin size={19} style={{ color: selected.color }} />
+                <span>Где спросить</span>
+                <strong>{selected.consultationLabel}, каб. {selected.consultationRoom}</strong>
+                <p>{selected.location}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => navigate(`/room?room=${selected.consultationRoom}`)}
+                className="program-room-link"
+                style={{
+                  borderColor: `${selected.color}45`,
+                  color: selected.color,
+                }}
+              >
+                <DoorOpen size={19} />
+                Открыть кабинет на странице аудиторий
+                <Navigation size={17} />
+              </button>
             </div>
 
             <div

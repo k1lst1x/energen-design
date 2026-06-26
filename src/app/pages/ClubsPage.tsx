@@ -171,6 +171,20 @@ const ClubDetail: React.FC<ClubDetailProps> = ({ club, onClose, onOpenEvent }) =
           </div>
 
           <aside className="club-modal-side">
+            {nearestEvent && (
+              <button
+                type="button"
+                className="club-modal-event-card"
+                onClick={() => onOpenEvent(nearestEvent.id)}
+                style={{ borderColor: `${nearestEvent.color}40` }}
+              >
+                <div className="club-modal-event-label" style={{ color: nearestEvent.color }}>Ближайшее мероприятие</div>
+                <strong>{nearestEvent.title}</strong>
+                <span>{nearestEvent.date} · {nearestEvent.location}</span>
+                <ArrowUpRight size={16} />
+              </button>
+            )}
+
             <div className="club-modal-panel">
               <div className="club-modal-panel-title">
                 <Trophy size={16} style={{ color: club.color }} />
@@ -196,6 +210,27 @@ const ClubDetail: React.FC<ClubDetailProps> = ({ club, onClose, onOpenEvent }) =
               </a>
             </div>
 
+            {clubEvents.length > 1 && (
+              <div className="club-modal-panel">
+                <div className="club-modal-panel-title">
+                  <CalendarDays size={16} style={{ color: club.color }} />
+                  Все мероприятия клуба
+                </div>
+                {clubEvents.map(event => (
+                  <button
+                    key={event.id}
+                    type="button"
+                    className="club-modal-event-link"
+                    onClick={() => onOpenEvent(event.id)}
+                    style={{ color: event.color }}
+                  >
+                    {event.dateShort.day} {event.dateShort.month} · {event.title}
+                    <ArrowUpRight size={14} />
+                  </button>
+                ))}
+              </div>
+            )}
+
             <div className="club-modal-socials">
               <a href={club.socials.instagram} target="_blank" rel="noreferrer" style={{ borderColor: `${club.color}45` }}>
                 <Instagram size={18} style={{ color: club.color }} />
@@ -216,9 +251,18 @@ const ClubDetail: React.FC<ClubDetailProps> = ({ club, onClose, onOpenEvent }) =
 };
 
 export const ClubsPage: React.FC = () => {
-  const [selectedClub, setSelectedClub] = useState<typeof clubs[0] | null>(null);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const focusedClubId = Number(searchParams.get('club')) || null;
+  const initialClub = focusedClubId ? clubs.find(club => club.id === focusedClubId) : null;
+  const [selectedClub, setSelectedClub] = useState<typeof clubs[0] | null>(initialClub ?? null);
   const [query, setQuery] = useState('');
   const [activeDirection, setActiveDirection] = useState('all');
+
+  useEffect(() => {
+    if (!initialClub) return;
+    setSelectedClub(initialClub);
+  }, [initialClub?.id]);
 
   const filteredClubs = clubs.filter(club => {
     const normalized = query.trim().toLowerCase();
@@ -230,6 +274,11 @@ export const ClubsPage: React.FC = () => {
     return matchesDirection && matchesQuery;
   });
   const spotlightClub = filteredClubs[0] ?? clubs[0];
+
+  const openEvent = (eventId: number) => {
+    setSelectedClub(null);
+    navigate(`/events?event=${eventId}`);
+  };
 
   return (
     <Layout title="Клубы и организации" showBack>
@@ -530,6 +579,7 @@ export const ClubsPage: React.FC = () => {
           <ClubDetail
             club={selectedClub}
             onClose={() => setSelectedClub(null)}
+            onOpenEvent={openEvent}
           />
         )}
       </AnimatePresence>

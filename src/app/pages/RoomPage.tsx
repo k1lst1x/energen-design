@@ -1,10 +1,10 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { motion } from 'motion/react';
 import {
   Building2, Camera, CheckCircle2, ChevronRight, Clock, DoorOpen, Filter, Info,
   MapPin, MessageSquare, Navigation, Search
 } from 'lucide-react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import { Layout } from '../components/Layout';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -159,13 +159,26 @@ const rooms: RoomEntry[] = [
 const typeFilters: Array<'Все' | RoomType> = ['Все', 'Учебная аудитория', 'Отдел', 'Деканат', 'Сервис'];
 
 export const RoomPage: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const roomFromUrl = searchParams.get('room')?.toLowerCase().replace(/\s+/g, '') ?? '';
+  const initialRoom = rooms.find(room => {
+    const normalizedRoom = room.number.toLowerCase().replace(/\s+/g, '');
+    return normalizedRoom === roomFromUrl || normalizedRoom.replace('-', '') === roomFromUrl.replace('-', '');
+  });
   const [query, setQuery] = useState('');
   const [activeType, setActiveType] = useState<'Все' | RoomType>('Все');
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState(rooms[0].id);
+  const [selectedId, setSelectedId] = useState(initialRoom?.id ?? rooms[0].id);
   const [activePhoto, setActivePhoto] = useState(0);
   const navigate = useNavigate();
   const { t } = useLanguage();
+
+  useEffect(() => {
+    if (!initialRoom) return;
+
+    setSelectedId(initialRoom.id);
+    setActivePhoto(0);
+  }, [initialRoom?.id]);
 
   const filteredRooms = useMemo(() => {
     const normalized = query.trim().toLowerCase().replace(/\s+/g, '');

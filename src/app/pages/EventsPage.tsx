@@ -376,30 +376,7 @@ export const EventsPage: React.FC = () => {
                       </div>
                     </div>
 
-                    {eventClubs.length > 0 && (
-                      <div className="event-clubs-block">
-                        <div className="event-clubs-title">Клубы участвуют в проведении</div>
-                        <div className="event-clubs-list">
-                          {eventClubs.map(club => (
-                            <button
-                              key={club.id}
-                              type="button"
-                              className="event-club-pill"
-                              onClick={() => navigate(`/clubs?club=${club.id}`)}
-                              style={{
-                                borderColor: `${club.color}38`,
-                                background: club.bg,
-                                color: club.color,
-                              }}
-                            >
-                              <img src={club.image} alt="" />
-                              <span>{club.name}</span>
-                              <ArrowUpRight size={14} />
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+                    <EventClubCarousel clubs={eventClubs} onOpenClub={clubId => navigate(`/clubs?club=${clubId}`)} />
 
                     {/* Progress bar */}
                     <div>
