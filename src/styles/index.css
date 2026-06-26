@@ -631,6 +631,10 @@ select {
   width: min(100%, 110rem);
 }
 
+.administration-page {
+  width: min(100%, 110rem);
+}
+
 .employee-workspace {
   align-items: start;
 }
