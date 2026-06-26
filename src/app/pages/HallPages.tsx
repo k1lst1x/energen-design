@@ -4,7 +4,7 @@ import {
   ArrowLeft, BookOpen, BriefcaseBusiness, Building2, CalendarCheck,
   CalendarDays, CheckCircle2, ChevronRight, Clock, CreditCard, DoorOpen,
   GraduationCap, Home, Languages, MapPin, Moon, Navigation, Phone, ShieldCheck, Sparkles,
-  Sun, Trophy, Users, Mic, MessageSquare,
+  Sun, Trophy, Users,
 } from 'lucide-react';
 import logoMint from '../../assets/energo-logo-mint.png';
 import { HeroRobotModel } from '../components/HeroRobotModel';
@@ -142,18 +142,17 @@ const HallSegment = <T extends string>({
 
 export const HallHomePage: React.FC = () => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
 
   return (
     <HallLayout title="Интерактивная панель">
-      <div
+      <main
         className="home-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
         style={{
           paddingTop: 'var(--home-container-padding-y)',
           paddingBottom: 'var(--home-container-padding-y)',
         }}
       >
-        <div className="home-hero-stage">
+        <section className="home-hero-stage" aria-label="Быстрые действия для панели">
           <div
             style={{
               position: 'absolute',
@@ -173,73 +172,25 @@ export const HallHomePage: React.FC = () => {
             </div>
 
             <div className="home-hero-copy">
-              <div>
-                <h1
-                  className="home-title"
-                  style={{
-                    fontSize: 'clamp(1.45rem, 2.7vw, 2.35rem)',
-                    fontWeight: 700,
-                    lineHeight: 1.2,
-                    letterSpacing: 0,
-                    margin: '0 auto 1rem',
-                    maxWidth: 'min(760px, calc(100vw - 3rem))',
-                    width: '100%',
-                    whiteSpace: 'nowrap',
-                    background: 'var(--app-hero-title)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                  }}
-                >
-                  {t('title')}
-                </h1>
-
-                <div className="home-mode-actions flex w-full flex-col sm:flex-row gap-4 items-center justify-center">
-                  <button
-                    onClick={() => navigate('/voice')}
-                    className="home-mode-button group flex items-center gap-3"
-                    style={{
-                      background: 'linear-gradient(135deg, var(--brand-mint), var(--brand-mint-strong))',
-                      color: '#0F0F0F',
-                      padding: '1rem 2rem',
-                      borderRadius: '3rem',
-                      fontWeight: 700,
-                      fontSize: '1rem',
-                      border: 'none',
-                      cursor: 'pointer',
-                      boxShadow: '0 0 30px rgba(var(--brand-mint-rgb),0.3), 0 4px 20px rgba(var(--brand-mint-rgb),0.2)',
-                      minWidth: 200,
-                    }}
-                  >
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--app-cta-icon-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Mic size={18} />
-                    </div>
-                    {t('voiceMode')}
-                  </button>
-
-                  <button
-                    onClick={() => navigate('/chat')}
-                    className="home-mode-button group flex items-center gap-3"
-                    style={{
-                      background: 'linear-gradient(135deg, var(--brand-mint), var(--brand-mint-strong))',
-                      color: '#0F0F0F',
-                      padding: '1rem 2rem',
-                      borderRadius: '3rem',
-                      fontWeight: 700,
-                      fontSize: '1rem',
-                      border: 'none',
-                      cursor: 'pointer',
-                      boxShadow: '0 0 30px rgba(var(--brand-mint-rgb),0.3), 0 4px 20px rgba(var(--brand-mint-rgb),0.2)',
-                      minWidth: 200,
-                    }}
-                  >
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--app-cta-icon-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <MessageSquare size={18} />
-                    </div>
-                    {t('textChat')}
-                  </button>
-                </div>
-              </div>
+              <h1
+                className="home-title"
+                style={{
+                  fontSize: 'clamp(1.45rem, 2.7vw, 2.35rem)',
+                  fontWeight: 700,
+                  lineHeight: 1.2,
+                  letterSpacing: 0,
+                  margin: '0 auto',
+                  maxWidth: 'min(760px, calc(100vw - 3rem))',
+                  width: '100%',
+                  whiteSpace: 'nowrap',
+                  background: 'var(--app-hero-title)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                }}
+              >
+                Цифровая навигация по университету
+              </h1>
             </div>
           </div>
 
@@ -248,35 +199,68 @@ export const HallHomePage: React.FC = () => {
             <div className="quick-actions-grid">
               {hallActions.map((card, index) => {
                 const Icon = card.icon;
-                const cls = `hero-action-card hero-action-card-${(index % 8) + 1}`;
                 return (
                   <button
                     key={card.key}
+                    type="button"
                     onClick={() => navigate(card.path)}
-                    className={`${cls} hero-action-card--hall`}
+                    className={`hero-action-card hero-action-card-${index + 1} group text-left transition-all duration-250`}
                     style={{
                       background: 'var(--app-card)',
                       border: '1px solid var(--app-border)',
                       borderRadius: 16,
                       padding: 'var(--home-card-padding)',
                       cursor: 'pointer',
-                      position: 'absolute',
                     }}
                   >
-                    <div className="hero-action-card-icon" style={{ width: 'var(--home-card-icon-size)', height: 'var(--home-card-icon-size)', borderRadius: 12, background: card.bg ?? 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 'var(--home-card-icon-gap)', border: `1px solid ${card.color}30` }}>
+                    <div
+                      className="hero-action-card-icon"
+                      style={{
+                        width: 'var(--home-card-icon-size)',
+                        height: 'var(--home-card-icon-size)',
+                        borderRadius: 12,
+                        background: `${card.color}20`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginBottom: 'var(--home-card-icon-gap)',
+                        border: `1px solid ${card.color}30`,
+                      }}
+                    >
                       <Icon size={22} style={{ color: card.color }} />
                     </div>
                     <div className="hero-action-card-copy">
-                      <div className="hero-action-card-title" style={{ fontSize: 'var(--home-card-title-size)', fontWeight: 700 }}>{card.label}</div>
-                      <div className="hero-action-card-description" style={{ fontSize: 'var(--home-card-desc-size)', color: 'var(--app-text-muted)' }}>{card.desc}</div>
+                      <div className="hero-action-card-title" style={{ fontSize: 'var(--home-card-title-size)', fontWeight: 700 }}>
+                        {card.label}
+                      </div>
+                      <div
+                        className="hero-action-card-description"
+                        style={{
+                          fontSize: 'var(--home-card-desc-size)',
+                          lineHeight: 'var(--home-card-desc-line-height)',
+                          color: 'var(--app-text-muted)',
+                        }}
+                      >
+                        {card.desc}
+                      </div>
                     </div>
+                    <ChevronRight
+                      size={20}
+                      style={{
+                        position: 'absolute',
+                        top: '0.85rem',
+                        right: '0.85rem',
+                        color: 'var(--app-text-muted)',
+                        opacity: 0.72,
+                      }}
+                    />
                   </button>
                 );
               })}
             </div>
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
     </HallLayout>
   );
 };

@@ -39,7 +39,7 @@ export const router = createHashRouter([
   { path: '/alumni', Component: AlumniPage },
   { path: '/payments', Component: PaymentPage },
   { path: '/directions', Component: DirectionsPage },
-  { path: '/hall', Component: HomePage },
+  { path: '/hall', Component: HallHomePage },
   { path: '/hall/room', Component: HallRoomPage },
   { path: '/hall/employee', Component: HallEmployeePage },
   { path: '/hall/administration', Component: HallAdministrationPage },
