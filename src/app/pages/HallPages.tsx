@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router';
 import {
   ArrowLeft, BookOpen, BriefcaseBusiness, Building2, CalendarCheck,
@@ -140,18 +140,110 @@ const HallSegment = <T extends string>({
   </div>
 );
 
+const HallParticleWeb: React.FC = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const parent = canvas?.parentElement;
+    if (!canvas || !parent) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const particles = Array.from({ length: 42 }, () => ({
+      x: Math.random(),
+      y: Math.random(),
+      vx: (Math.random() - 0.5) * 0.00045,
+      vy: (Math.random() - 0.5) * 0.00045,
+      r: 1.2 + Math.random() * 1.8,
+    }));
+
+    let frame = 0;
+    let raf = 0;
+
+    const resize = () => {
+      const rect = parent.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+      canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const draw = () => {
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
+      ctx.clearRect(0, 0, width, height);
+
+      particles.forEach(point => {
+        point.x += point.vx;
+        point.y += point.vy;
+        if (point.x < 0 || point.x > 1) point.vx *= -1;
+        if (point.y < 0 || point.y > 1) point.vy *= -1;
+      });
+
+      for (let i = 0; i < particles.length; i += 1) {
+        const a = particles[i];
+        const ax = a.x * width;
+        const ay = a.y * height;
+
+        for (let j = i + 1; j < particles.length; j += 1) {
+          const b = particles[j];
+          const bx = b.x * width;
+          const by = b.y * height;
+          const distance = Math.hypot(ax - bx, ay - by);
+          const limit = Math.min(190, width * 0.16);
+
+          if (distance < limit) {
+            const alpha = (1 - distance / limit) * 0.22;
+            ctx.strokeStyle = `rgba(127, 184, 160, ${alpha})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(ax, ay);
+            ctx.lineTo(bx, by);
+            ctx.stroke();
+          }
+        }
+
+        const pulse = 0.55 + Math.sin(frame * 0.018 + i) * 0.18;
+        ctx.fillStyle = `rgba(127, 184, 160, ${pulse})`;
+        ctx.beginPath();
+        ctx.arc(ax, ay, a.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      frame += 1;
+      raf = window.requestAnimationFrame(draw);
+    };
+
+    resize();
+    draw();
+    window.addEventListener('resize', resize);
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      window.cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  return <canvas className="hall-particle-web" ref={canvasRef} aria-hidden="true" />;
+};
+
 export const HallHomePage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
     <HallLayout title="Интерактивная панель">
       <main
-        className="home-container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        className="home-container hall-home-with-web max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
         style={{
           paddingTop: 'var(--home-container-padding-y)',
           paddingBottom: 'var(--home-container-padding-y)',
         }}
       >
+        <HallParticleWeb />
         <section className="home-hero-stage" aria-label="Быстрые действия для панели">
           <div
             style={{
@@ -507,7 +599,6 @@ export const HallAdministrationPage: React.FC = () => {
       <main className="hall-page">
         <section className="hall-directory-layout">
           <aside className="hall-list">
-            <div className="hall-list-head"><strong>{leaders.length}</strong><span>руководителя</span></div>
             {leaders.map(leader => (
               <button
                 key={leader.id}
@@ -524,14 +615,14 @@ export const HallAdministrationPage: React.FC = () => {
             ))}
           </aside>
 
-          <article className="hall-detail-card" style={{ '--hall-accent': selected.color } as React.CSSProperties}>
+          <article className="hall-detail-card hall-admin-detail" style={{ '--hall-accent': selected.color } as React.CSSProperties}>
             <header>
               <div>
                 <span className="hall-detail-code">{selected.department}</span>
                 <h1>{selected.role}</h1>
                 <p>{selected.name}</p>
               </div>
-              <img src={selected.photo} alt={selected.name} style={{ width: 132, height: 132, borderRadius: '1.2rem', objectFit: 'cover', border: '1px solid color-mix(in srgb, var(--hall-accent) 30%, transparent)' }} />
+              <img className="hall-admin-photo" src={selected.photo} alt={selected.name} />
             </header>
             <div className="hall-facts-grid">
               <section><MapPin size={24} /><span>{selected.room}</span></section>
@@ -586,23 +677,47 @@ export const HallEventsPage: React.FC = () => {
               <button key={event.id} type="button" className="hall-list-item" data-active={selected.id === event.id} onClick={() => setSelectedId(event.id)} style={{ '--hall-accent': event.color } as React.CSSProperties}>
                 <b>{event.dateShort.day} {event.dateShort.month}</b>
                 <span>{event.title}</span>
-                <small>{event.typeLabel} · {event.location}</small>
+                <small>{event.time} · {event.typeLabel} · {event.location}</small>
               </button>
             ))}
           </aside>
-          <article className="hall-detail-card hall-media-detail" style={{ '--hall-accent': selected.color } as React.CSSProperties}>
-            <img src={selected.image} alt={selected.title} />
-            <div>
-              <span className="hall-detail-code">{selected.date} · {selected.typeLabel}</span>
-              <h1>{selected.title}</h1>
-              <p>{selected.description}</p>
-              <div className="hall-facts-grid">
-                <section><MapPin size={24} /><span>{selected.location}</span></section>
-                <section><Users size={24} /><span>{selected.registered} / {selected.capacity} мест</span></section>
-                <section><Sparkles size={24} /><span>{Math.round((selected.registered / selected.capacity) * 100)}% заполнено</span></section>
-              </div>
-              <div className="hall-chip-cloud">
-                {clubsForSelected.map(club => club && <span key={club.id}>{club.name}</span>)}
+          <article className="hall-detail-card hall-stacked-detail hall-event-card" style={{ '--hall-accent': selected.color } as React.CSSProperties}>
+            <img className="hall-stacked-photo" src={selected.image} alt={selected.title} />
+            <div className="hall-stacked-body">
+              <section className="hall-stacked-main">
+                <span className="hall-detail-code">{selected.date} · {selected.time} · {selected.typeLabel}</span>
+                <h1>{selected.title}</h1>
+                <p>{selected.description}</p>
+
+                <section className="hall-event-agenda">
+                  <h2>Программа</h2>
+                  <div>
+                    {selected.agenda.map(item => (
+                      <p key={item}>{item}</p>
+                    ))}
+                  </div>
+                </section>
+
+                <div className="hall-chip-cloud">
+                  {clubsForSelected.map(club => club && <span key={club.id}>{club.name}</span>)}
+                </div>
+              </section>
+
+              <div className="hall-stacked-side">
+                <div className="hall-facts-grid">
+                  <section><MapPin size={24} /><span>{selected.location}</span></section>
+                  <section><Clock size={24} /><span>{selected.time}</span></section>
+                  <section><Users size={24} /><span>{selected.registered} / {selected.capacity} мест</span></section>
+                  <section><Sparkles size={24} /><span>{Math.round((selected.registered / selected.capacity) * 100)}% заполнено</span></section>
+                  <section><CalendarCheck size={24} /><span>{selected.format}</span></section>
+                  <section><Building2 size={24} /><span>{selected.organizer}</span></section>
+                </div>
+                <div className="hall-event-panels">
+                  <section><span>Для кого</span><b>{selected.audience}</b></section>
+                  <section><span>Длительность</span><b>{selected.duration}</b></section>
+                  <section><span>Язык</span><b><Languages size={18} />{selected.language}</b></section>
+                  <section><span>Контакт</span><b>{selected.contacts}</b></section>
+                </div>
               </div>
             </div>
           </article>
@@ -621,6 +736,7 @@ export const HallClubsPage: React.FC = () => {
   const selected = filteredClubs.find(club => club.id === selectedId) ?? filteredClubs[0] ?? clubs[0];
   const gallery = selected.gallery.length ? selected.gallery : [selected.image];
   const nearestEvent = getNearestEventForClub(selected.id);
+  const selectedDirectionLabel = directions.find(item => item.key === selected.direction)?.label ?? 'Клуб';
 
   return (
     <HallLayout title="Клубы">
@@ -633,14 +749,14 @@ export const HallClubsPage: React.FC = () => {
             <div className="hall-list-head"><strong>{filteredClubs.length}</strong><span>клуба</span></div>
             {filteredClubs.map(club => (
               <button key={club.id} type="button" className="hall-list-item" data-active={selected.id === club.id} onClick={() => { setSelectedId(club.id); setActivePhoto(0); }} style={{ '--hall-accent': club.color } as React.CSSProperties}>
-                <b>{club.members} участников</b>
+                <b>{directions.find(item => item.key === club.direction)?.label ?? 'Клуб'}</b>
                 <span>{club.name}</span>
-                <small>{club.tags.slice(0, 2).join(' · ')}</small>
+                <small>{club.shortDesc}</small>
               </button>
             ))}
           </aside>
-          <article className="hall-detail-card hall-media-detail" style={{ '--hall-accent': selected.color } as React.CSSProperties}>
-            <div className="hall-photo-block">
+          <article className="hall-detail-card hall-stacked-detail" style={{ '--hall-accent': selected.color } as React.CSSProperties}>
+            <div className="hall-photo-block hall-stacked-photo-block">
               <img src={gallery[activePhoto % gallery.length]} alt={selected.name} />
               <div className="hall-photo-tabs">
                 {gallery.map((photo, index) => (
@@ -650,17 +766,26 @@ export const HallClubsPage: React.FC = () => {
                 ))}
               </div>
             </div>
-            <div>
-              <span className="hall-detail-code">{selected.members} участников</span>
-              <h1>{selected.name}</h1>
-              <p>{selected.fullDesc}</p>
-              <div className="hall-facts-grid">
-                <section><MapPin size={24} /><span>{selected.location}</span></section>
-                <section><CalendarDays size={24} /><span>{selected.schedule}</span></section>
-                <section><Trophy size={24} /><span>{nearestEvent?.title ?? selected.nextEvent}</span></section>
-              </div>
-              <div className="hall-chip-cloud">
-                {selected.tags.concat(selected.achievements.slice(0, 2)).map(item => <span key={item}>{item}</span>)}
+            <div className="hall-stacked-body">
+              <section className="hall-stacked-main">
+                <span className="hall-detail-code">{selectedDirectionLabel}</span>
+                <h1>{selected.name}</h1>
+                <p>{selected.fullDesc}</p>
+                <div className="hall-chip-cloud">
+                  {selected.tags.concat(selected.achievements.slice(0, 2)).map(item => <span key={item}>{item}</span>)}
+                </div>
+              </section>
+              <div className="hall-stacked-side">
+                <div className="hall-facts-grid">
+                  <section><MapPin size={24} /><span>{selected.location}</span></section>
+                  <section><Phone size={24} /><span>{selected.contacts.phone}</span></section>
+                  <section><Trophy size={24} /><span>{nearestEvent?.title ?? selected.nextEvent}</span></section>
+                </div>
+                <div className="hall-event-panels">
+                  <section><span>Email</span><b>{selected.contacts.email}</b></section>
+                  <section><span>Instagram</span><b>{selected.contacts.instagram}</b></section>
+                  <section><span>Запись</span><b>Позвоните куратору клуба или напишите в Instagram</b></section>
+                </div>
               </div>
             </div>
           </article>
@@ -696,8 +821,8 @@ export const HallProgramsPage: React.FC = () => {
               </button>
             ))}
           </aside>
-          <article className="hall-detail-card hall-media-detail" style={{ '--hall-accent': selected.color } as React.CSSProperties}>
-            <div className="hall-photo-block">
+          <article className="hall-detail-card hall-stacked-detail" style={{ '--hall-accent': selected.color } as React.CSSProperties}>
+            <div className="hall-photo-block hall-stacked-photo-block">
               <img src={currentPhoto.url} alt={selected.name} />
               <div className="hall-photo-tabs">
                 {selected.gallery.map((photo, index) => (
@@ -707,29 +832,43 @@ export const HallProgramsPage: React.FC = () => {
                 ))}
               </div>
             </div>
-            <div>
-              <span className="hall-detail-code">{selected.code} · {selected.level}</span>
-              <h1>{selected.name}</h1>
-              <p>{selected.description}</p>
-              <div className="hall-facts-grid">
-                <section><Trophy size={24} /><span>{selected.grantScore}+ грант</span></section>
-                <section><Languages size={24} /><span>{selected.languages.join(' / ')}</span></section>
-                <section><BookOpen size={24} /><span>{selected.ects} ECTS</span></section>
-              </div>
-              <div className="hall-two-columns">
-                <section>
-                  <h2>Карьера</h2>
-                  <div className="hall-chip-cloud">{selected.careers.map(career => <span key={career}><BriefcaseBusiness size={16} /> {career}</span>)}</div>
-                </section>
-                <section>
-                  <h2>Консультация</h2>
-                  <div className="hall-action-row">
-                    <button type="button" onClick={() => navigate(routeToRoom(selected.consultationRoom))}>
-                      <DoorOpen size={24} />
-                      {selected.consultationLabel}, каб. {selected.consultationRoom}
-                    </button>
-                  </div>
-                </section>
+            <div className="hall-stacked-body">
+              <section className="hall-stacked-main">
+                <span className="hall-detail-code">{selected.code} · {selected.level}</span>
+                <h1>{selected.name}</h1>
+                <p>{selected.description}</p>
+                <div className="hall-chip-cloud">{selected.careers.map(career => <span key={career}><BriefcaseBusiness size={16} /> {career}</span>)}</div>
+              </section>
+              <div className="hall-stacked-side">
+                <div className="hall-facts-grid">
+                  <section><Trophy size={24} /><span>{selected.grantScore}+ грант</span></section>
+                  <section><Languages size={24} /><span>{selected.languages.join(' / ')}</span></section>
+                  <section><BookOpen size={24} /><span>{selected.ects} ECTS</span></section>
+                </div>
+                <div className="hall-two-columns hall-program-panels">
+                  <section>
+                    <h2>Фокус</h2>
+                    <p>{selected.goal}</p>
+                  </section>
+                  <section>
+                    <h2>Консультация</h2>
+                    <div className="hall-action-row">
+                      <button type="button" onClick={() => navigate(routeToRoom(selected.consultationRoom))}>
+                        <DoorOpen size={24} />
+                        {selected.consultationLabel}, каб. {selected.consultationRoom}
+                      </button>
+                    </div>
+                  </section>
+                  <section>
+                    <h2>Контакт</h2>
+                    <p>{selected.contact}</p>
+                  </section>
+                  <section>
+                    <h2>Институт</h2>
+                    <p>{selected.institute}</p>
+                    <p>{selected.department}</p>
+                  </section>
+                </div>
               </div>
             </div>
           </article>
