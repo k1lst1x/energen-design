@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import {
   BookOpen, CalendarCheck, CheckCircle2, ChevronRight, Clock, Filter,
   GraduationCap, Mail, MapPin, MessageSquare, Navigation, Phone, Search,
-  ShieldCheck, Star, UserCheck, Users
+  ShieldCheck, Star, Users
 } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { Layout } from '../components/Layout';
@@ -178,6 +178,7 @@ export const EmployeePage: React.FC = () => {
   const { t } = useLanguage();
   const [query, setQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<'Все' | StaffCategory>('Все');
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [selectedId, setSelectedId] = useState(staff[0].id);
 
   const filteredStaff = useMemo(() => {
@@ -196,7 +197,7 @@ export const EmployeePage: React.FC = () => {
     });
   }, [activeCategory, query]);
 
-  const selected = staff.find(member => member.id === selectedId) ?? filteredStaff[0] ?? staff[0];
+  const selected = filteredStaff.find(member => member.id === selectedId) ?? filteredStaff[0] ?? staff[0];
   const CategoryIcon = categoryIcons[selected.category];
   const presenceColor = presenceColors[selected.presence] ?? selected.color;
 
@@ -204,67 +205,58 @@ export const EmployeePage: React.FC = () => {
 
   return (
     <Layout title="Сотрудники" showBack>
-      <div className="page-content max-w-6xl mx-auto px-4 sm:px-6" style={{ paddingTop: '2rem', paddingBottom: '4rem' }}>
-        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} style={{ marginBottom: '1.5rem' }}>
-          <h1 style={{ color: 'var(--app-text-strong)', fontWeight: 850, fontSize: '1.9rem', marginBottom: 8 }}>
-            Сотрудники и преподаватели
-          </h1>
-          <p style={{ color: 'var(--app-text-muted)', fontSize: '0.95rem', maxWidth: 820, lineHeight: 1.6 }}>
-            Поиск по ФИО, должности, подразделению или вопросу. Карточка показывает кабинет, присутствие, часы приёма и по каким вопросам обращаться.
-          </p>
-        </motion.div>
+      <div className="employee-page page-content mx-auto px-4 sm:px-6" style={{ paddingTop: '1.15rem', paddingBottom: '3rem' }}>
+        <div className="employee-workspace grid lg:grid-cols-[330px_minmax(0,1fr)] gap-6">
+          <aside className="employee-search-sidebar">
+            <motion.h1 className="employee-search-title" initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}>
+              Сотрудники
+            </motion.h1>
 
-        <div className="grid lg:grid-cols-[390px_1fr] gap-5">
-          <aside>
-            <div
-              className="flex items-center gap-2"
-              style={{
-                background: 'var(--app-card)',
-                border: '1px solid var(--app-border)',
-                borderRadius: 14,
-                padding: '0.85rem 1rem',
-                marginBottom: '0.85rem',
-              }}
-            >
-              <Search size={18} style={{ color: 'var(--app-icon-muted)' }} />
-              <input
-                value={query}
-                onChange={event => setQuery(event.target.value)}
-                placeholder="ФИО, должность или вопрос"
-                style={{
-                  flex: 1,
-                  background: 'transparent',
-                  border: 0,
-                  outline: 'none',
-                  color: 'var(--app-text)',
-                  fontSize: '0.95rem',
-                }}
-              />
+            <div className="room-search-toolbar">
+              <div className="room-search-field">
+                <Search size={18} style={{ color: 'var(--app-icon-muted)' }} />
+                <input
+                  value={query}
+                  onChange={event => setQuery(event.target.value)}
+                  placeholder="ФИО, должность или вопрос"
+                  aria-label="Поиск сотрудника"
+                />
+              </div>
+              <button
+                type="button"
+                className="room-filter-trigger"
+                data-active={activeCategory !== 'Все'}
+                onClick={() => setFiltersOpen(current => !current)}
+                aria-label="Фильтр сотрудников"
+                aria-expanded={filtersOpen}
+                title="Фильтр"
+              >
+                <Filter size={18} />
+              </button>
+              {filtersOpen && (
+                <div className="room-filter-popover" aria-label="Фильтр по категории">
+                  <span>Категория</span>
+                  <div>
+                    {categories.map(category => (
+                      <button
+                        key={category}
+                        type="button"
+                        onClick={() => {
+                          setActiveCategory(category);
+                          setFiltersOpen(false);
+                        }}
+                        data-active={activeCategory === category}
+                      >
+                        {category}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
-            <div className="flex items-center gap-2 flex-wrap" style={{ marginBottom: '1rem' }}>
-              <Filter size={16} style={{ color: 'var(--app-icon-muted)' }} />
-              {categories.map(category => (
-                <button
-                  key={category}
-                  type="button"
-                  onClick={() => setActiveCategory(category)}
-                  style={{
-                    background: activeCategory === category ? 'var(--brand-mint)' : 'var(--app-control)',
-                    border: '1px solid var(--app-control-border)',
-                    color: activeCategory === category ? '#0F0F0F' : 'var(--app-text-muted)',
-                    borderRadius: 999,
-                    padding: '0.45rem 0.75rem',
-                    fontWeight: 800,
-                    fontSize: '0.875rem',
-                  }}
-                >
-                  {category}
-                </button>
-              ))}
-            </div>
-
-            <div className="directory-results flex flex-col gap-3">
+            <div className="employee-results-meta"><span>Результаты</span><strong>{filteredStaff.length}</strong></div>
+            <div className="employee-results directory-results">
               {filteredStaff.length ? filteredStaff.map(member => {
                 const Icon = categoryIcons[member.category];
                 const memberPresenceColor = presenceColors[member.presence] ?? member.color;
@@ -273,104 +265,43 @@ export const EmployeePage: React.FC = () => {
                     key={member.id}
                     type="button"
                     onClick={() => chooseMember(member.id)}
-                    className="text-left transition-all duration-200"
-                    style={{
-                      background: selected.id === member.id ? 'var(--app-surface-hover)' : 'var(--app-card)',
-                      border: `1px solid ${selected.id === member.id ? member.color + '66' : 'var(--app-border)'}`,
-                      borderRadius: 18,
-                      padding: '1rem',
-                      boxShadow: selected.id === member.id ? `0 16px 36px ${member.color}16` : 'none',
-                    }}
+                    className="employee-result-card"
+                    data-selected={selected.id === member.id}
+                    style={{ '--employee-accent': member.color } as React.CSSProperties}
                   >
-                    <div className="flex items-start gap-3">
-                      <img
-                        src={member.photo}
-                        alt={member.name}
-                        style={{ width: 58, height: 58, borderRadius: 16, objectFit: 'cover', objectPosition: 'top center', flexShrink: 0 }}
-                      />
-                      <div style={{ minWidth: 0, flex: 1 }}>
-                        <div className="flex items-center gap-2 flex-wrap" style={{ marginBottom: 6 }}>
-                          <span className="flex items-center gap-1" style={{ color: member.color, fontWeight: 850, fontSize: '0.875rem' }}>
-                            <Icon size={14} />
-                            {member.category}
-                          </span>
-                          <span style={{ color: memberPresenceColor, fontWeight: 800, fontSize: '0.875rem' }}>
-                            {member.presence}
-                          </span>
-                        </div>
-                        <div style={{ color: 'var(--app-text-strong)', fontWeight: 850, lineHeight: 1.25 }}>{member.name}</div>
-                        <div style={{ color: 'var(--app-text-muted)', fontSize: '0.9rem', marginTop: 5 }}>{member.role}</div>
-                      </div>
-                      <ChevronRight size={18} style={{ color: 'var(--app-icon-muted)', flexShrink: 0 }} />
+                    <img src={member.photo} alt="" />
+                    <div>
+                      <div className="employee-result-status" style={{ color: memberPresenceColor }}><Icon size={13} /> {member.category} · {member.presence}</div>
+                      <div className="employee-result-name">{member.name}</div>
+                      <div className="employee-result-role">{member.role}</div>
                     </div>
+                    <ChevronRight size={18} />
                   </button>
                 );
               }) : (
-                <div style={{ background: 'var(--app-card)', border: '1px solid var(--app-border)', borderRadius: 18, padding: '1rem', color: 'var(--app-text-muted)', lineHeight: 1.5 }}>
-                  Сотрудник не найден. Попробуйте запрос “общежитие”, “академическая справка”, “оплата” или ФИО.
-                </div>
+                <div className="room-empty-state">Сотрудник не найден. Попробуйте ФИО, подразделение или вопрос.</div>
               )}
             </div>
           </aside>
 
-          <motion.section
-            className="directory-detail"
-            key={selected.id}
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25 }}
-            style={{
-              background: 'var(--app-card)',
-              border: '1px solid var(--app-border)',
-              borderRadius: 22,
-              overflow: 'hidden',
-              boxShadow: '0 18px 46px var(--app-shadow)',
-            }}
-          >
-            <div
-              style={{
-                height: 132,
-                background: `linear-gradient(135deg, ${selected.color}38, rgba(var(--brand-mint-rgb),0.08))`,
-                borderBottom: '1px solid var(--app-border)',
-                position: 'relative',
-              }}
-            />
-
-            <div className="detail-content" style={{ padding: '0 1.5rem 1.5rem' }}>
-              <div className="flex items-end justify-between gap-4 flex-wrap" style={{ marginTop: -52, marginBottom: '1.25rem' }}>
-                <div className="flex items-end gap-4">
-                  <img
-                    src={selected.photo}
-                    alt={selected.name}
-                    style={{
-                      width: 104,
-                      height: 104,
-                      borderRadius: 24,
-                      objectFit: 'cover',
-                      objectPosition: 'top center',
-                      border: '4px solid var(--app-card)',
-                      boxShadow: '0 16px 36px var(--app-shadow)',
-                    }}
-                  />
-                  <div style={{ paddingBottom: 8 }}>
-                    <div className="flex items-center gap-2 flex-wrap" style={{ marginBottom: 8 }}>
-                      <span className="flex items-center gap-1" style={{ color: selected.color, fontWeight: 850 }}>
-                        <CategoryIcon size={16} />
-                        {selected.category}
-                      </span>
-                      <span style={{ color: presenceColor, fontWeight: 850 }}>{selected.presence}</span>
-                    </div>
-                    <h2 style={{ color: 'var(--app-text-strong)', fontWeight: 900, fontSize: '1.55rem', lineHeight: 1.15 }}>
-                      {selected.name}
-                    </h2>
+          <motion.section className="employee-profile" key={selected.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.22 }}>
+            <div className="employee-profile-cover" style={{ background: `linear-gradient(135deg, ${selected.color}38, rgba(var(--brand-mint-rgb),0.08))` }} />
+            <div className="employee-profile-content">
+              <header className="employee-profile-header">
+                <img src={selected.photo} alt={selected.name} />
+                <div>
+                  <div className="employee-profile-status">
+                    <span style={{ color: selected.color }}><CategoryIcon size={16} /> {selected.category}</span>
+                    <span style={{ color: presenceColor }}>{selected.presence}</span>
                   </div>
+                  <h2>{selected.name}</h2>
                 </div>
-              </div>
+              </header>
 
-              <div style={{ color: 'var(--brand-mint-strong)', fontWeight: 850, marginBottom: 6 }}>{selected.role}</div>
-              <div style={{ color: 'var(--app-text-muted)', marginBottom: '1.25rem' }}>{selected.department}</div>
+              <div className="employee-profile-role" style={{ color: selected.color }}>{selected.role}</div>
+              <div className="employee-profile-department">{selected.department}</div>
 
-              <div className="grid md:grid-cols-3 gap-3" style={{ marginBottom: '1.25rem' }}>
+              <div className="employee-profile-facts">
                 {[
                   { icon: MapPin, label: 'Кабинет', value: `${selected.room}, ${selected.floor}, ${selected.corpus}` },
                   { icon: Clock, label: 'Приём', value: selected.hours },
@@ -378,120 +309,47 @@ export const EmployeePage: React.FC = () => {
                 ].map(item => {
                   const Icon = item.icon;
                   return (
-                    <div key={item.label} style={{ background: 'var(--app-bg-soft)', border: '1px solid var(--app-border)', borderRadius: 16, padding: '1rem' }}>
-                      <Icon size={18} style={{ color: selected.color, marginBottom: 10 }} />
-                      <div style={{ color: 'var(--app-text-soft)', fontSize: '0.875rem', marginBottom: 5 }}>{item.label}</div>
-                      <div style={{ color: 'var(--app-text-strong)', fontWeight: 800, lineHeight: 1.35 }}>{item.value}</div>
-                    </div>
+                    <section key={item.label}>
+                      <Icon size={18} style={{ color: selected.color }} />
+                      <span>{item.label}</span>
+                      <strong>{item.value}</strong>
+                    </section>
                   );
                 })}
               </div>
 
-              <div className="grid lg:grid-cols-[1fr_0.9fr] gap-4">
-                <div style={{ background: 'var(--app-bg-soft)', border: '1px solid var(--app-border)', borderRadius: 18, padding: '1rem' }}>
-                  <div className="flex items-center gap-2" style={{ color: 'var(--app-text-strong)', fontWeight: 850, marginBottom: 12 }}>
-                    <CheckCircle2 size={17} style={{ color: selected.color }} />
-                    По каким вопросам обращаться
+              <div className="employee-profile-panels">
+                <section>
+                  <div className="employee-panel-heading"><CheckCircle2 size={17} style={{ color: selected.color }} /> По каким вопросам обращаться</div>
+                  <div className="employee-profile-questions">
+                    {selected.questions.map(question => <div key={question}><CheckCircle2 size={16} style={{ color: selected.color }} /> {question}</div>)}
                   </div>
-                  <div className="flex flex-col gap-2">
-                    {selected.questions.map(question => (
-                      <div key={question} className="flex items-start gap-2" style={{ color: 'var(--app-text)', lineHeight: 1.45 }}>
-                        <CheckCircle2 size={16} style={{ color: selected.color, marginTop: 2, flexShrink: 0 }} />
-                        {question}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div style={{ background: 'var(--app-bg-soft)', border: '1px solid var(--app-border)', borderRadius: 18, padding: '1rem' }}>
-                  <div className="flex items-center gap-2" style={{ color: 'var(--app-text-strong)', fontWeight: 850, marginBottom: 12 }}>
-                    <CalendarCheck size={17} style={{ color: selected.color }} />
-                    Ближайшие часы
-                  </div>
-                  <div className="flex flex-col gap-2">
+                </section>
+                <section>
+                  <div className="employee-panel-heading"><CalendarCheck size={17} style={{ color: selected.color }} /> Ближайшие часы</div>
+                  <div className="employee-profile-schedule">
                     {selected.schedule.map(slot => (
-                      <div key={`${slot.day}-${slot.time}`} className="flex items-center justify-between gap-3" style={{ color: 'var(--app-text)' }}>
-                        <span>{slot.day}</span>
-                        <span style={{ color: slot.status === 'Свободно' ? 'var(--brand-mint-strong)' : 'var(--app-text-muted)', fontWeight: 800 }}>
-                          {slot.time}
-                        </span>
-                      </div>
+                      <div key={`${slot.day}-${slot.time}`}><span>{slot.day}</span><strong style={{ color: slot.status === 'Свободно' ? 'var(--brand-mint-strong)' : 'var(--app-text-muted)' }}>{slot.time}</strong></div>
                     ))}
                   </div>
-                </div>
+                </section>
               </div>
 
-              <div className="grid md:grid-cols-3 gap-3" style={{ marginTop: '1.25rem' }}>
+              <div className="employee-profile-contacts">
                 {[
                   { icon: Mail, label: selected.email, href: `mailto:${selected.email}` },
                   { icon: Phone, label: selected.phone, href: `tel:${selected.phone.replace(/\D/g, '')}` },
                   { icon: MessageSquare, label: selected.telegram, href: '#' },
                 ].map(contact => {
                   const Icon = contact.icon;
-                  return (
-                    <a
-                      key={contact.label}
-                      href={contact.href}
-                      className="flex items-center gap-2"
-                      style={{
-                        background: 'var(--app-control)',
-                        border: '1px solid var(--app-control-border)',
-                        borderRadius: 14,
-                        padding: '0.85rem',
-                        color: 'var(--app-text)',
-                        textDecoration: 'none',
-                        minWidth: 0,
-                      }}
-                    >
-                      <Icon size={17} style={{ color: selected.color, flexShrink: 0 }} />
-                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{contact.label}</span>
-                    </a>
-                  );
+                  return <a key={contact.label} href={contact.href}><Icon size={17} style={{ color: selected.color }} /><span>{contact.label}</span></a>;
                 })}
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3" style={{ marginTop: '1.25rem' }}>
-                <button
-                  type="button"
-                  onClick={() => navigate('/room')}
-                  style={{
-                    flex: 1,
-                    background: 'var(--app-control)',
-                    border: '1px solid var(--app-control-border)',
-                    borderRadius: 16,
-                    padding: '1rem',
-                    color: 'var(--brand-mint-strong)',
-                    fontWeight: 850,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 8,
-                  }}
-                >
-                  <Navigation size={18} />
-                  {t('howToGetThere')}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => navigate(selected.category === 'ППС' || selected.category === 'Сервис' ? '/chat' : '/appointment')}
-                  style={{
-                    flex: 1,
-                    background: 'linear-gradient(135deg, var(--brand-mint), var(--brand-mint-strong))',
-                    border: 'none',
-                    borderRadius: 16,
-                    padding: '1rem',
-                    color: '#0F0F0F',
-                    fontWeight: 850,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 8,
-                  }}
-                >
-                  <CalendarCheck size={18} />
-                  {selected.category === 'ППС' || selected.category === 'Сервис' ? 'Уточнить вопрос' : t('bookAppointment')}
+              <div className="employee-profile-actions">
+                <button type="button" className="employee-profile-route" onClick={() => navigate('/room')}><Navigation size={18} /> {t('howToGetThere')}</button>
+                <button type="button" className="employee-profile-action" onClick={() => navigate(selected.category === 'ППС' || selected.category === 'Сервис' ? '/chat' : '/appointment')}>
+                  <CalendarCheck size={18} /> {selected.category === 'ППС' || selected.category === 'Сервис' ? 'Уточнить вопрос' : t('bookAppointment')}
                 </button>
               </div>
             </div>

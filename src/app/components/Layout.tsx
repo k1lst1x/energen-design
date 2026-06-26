@@ -16,7 +16,7 @@ interface LayoutProps {
   fullscreen?: boolean;
 }
 
-export const Layout: React.FC<LayoutProps> = ({ children, showBack, title, fullscreen }) => {
+export const Layout: React.FC<LayoutProps> = ({ children, showBack, fullscreen }) => {
   const { lang, setLang, t } = useLanguage();
   const { theme, toggleTheme } = useThemeMode();
   const navigate = useNavigate();
@@ -252,7 +252,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, showBack, title, fulls
 
       {showBack && (
         <div
-          className="page-back-wrap max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+          className="page-back-wrap w-full px-4 sm:px-6 lg:px-8"
           style={{ paddingTop: '1rem' }}
         >
           <div className="page-back-row flex items-center gap-3">
@@ -284,17 +284,6 @@ export const Layout: React.FC<LayoutProps> = ({ children, showBack, title, fulls
             >
               <ArrowLeft size={21} />
             </button>
-            {title ? (
-              <span
-                style={{
-                  color: 'var(--brand-mint-strong)',
-                  fontSize: '0.95rem',
-                  fontWeight: 600,
-                }}
-              >
-                {title}
-              </span>
-            ) : null}
           </div>
         </div>
       )}
