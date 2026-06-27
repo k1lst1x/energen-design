@@ -156,7 +156,7 @@ const HallParticleWeb: React.FC = () => {
       y: Math.random(),
       vx: (Math.random() - 0.5) * 0.00045,
       vy: (Math.random() - 0.5) * 0.00045,
-      r: 1.2 + Math.random() * 1.8,
+      r: 2 + Math.random() * 2.6,
     }));
 
     let frame = 0;
@@ -197,9 +197,9 @@ const HallParticleWeb: React.FC = () => {
           const limit = Math.min(190, width * 0.16);
 
           if (distance < limit) {
-            const alpha = (1 - distance / limit) * 0.22;
+            const alpha = (1 - distance / limit) * 0.28;
             ctx.strokeStyle = `rgba(127, 184, 160, ${alpha})`;
-            ctx.lineWidth = 1;
+            ctx.lineWidth = 1.35;
             ctx.beginPath();
             ctx.moveTo(ax, ay);
             ctx.lineTo(bx, by);
