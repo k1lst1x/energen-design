@@ -86,19 +86,21 @@ const HallLayout: React.FC<{ title?: string; children: React.ReactNode }> = ({ t
   return (
     <div className="hall-shell">
       <header className="hall-header">
-        <button type="button" className="hall-logo-button" onClick={() => navigate('/hall')} aria-label="Hall home">
-          <img src={logoMint} alt="Energo University" />
-        </button>
-        <div className="hall-header-title">
-          <strong>{title ?? 'Energen'}</strong>
-        </div>
-        <nav className="hall-header-actions" aria-label="Hall navigation">
+        <div className="hall-header-left">
+          <button type="button" className="hall-logo-button" onClick={() => navigate('/hall')} aria-label="Hall home">
+            <img src={logoMint} alt="Energo University" />
+          </button>
           {!isHome && (
-            <button type="button" onClick={() => navigate(-1)} aria-label="Назад">
+            <button type="button" className="hall-back-button" onClick={() => navigate(-1)} aria-label="Назад">
               <ArrowLeft size={26} />
               Назад
             </button>
           )}
+        </div>
+        <div className="hall-header-title">
+          <strong>{title ?? 'Energen'}</strong>
+        </div>
+        <nav className="hall-header-actions" aria-label="Hall navigation">
           <button type="button" onClick={() => navigate('/hall')} data-active={isHome} aria-label="Главная">
             <Home size={25} />
             Главная

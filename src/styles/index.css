@@ -2606,9 +2606,15 @@ select {
   backdrop-filter: blur(20px);
 }
 
-.hall-logo-button {
+.hall-header-left {
   position: relative;
   z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hall-logo-button {
   display: flex;
   align-items: center;
   border: 0;
@@ -2655,6 +2661,7 @@ select {
 }
 
 .hall-header-actions button,
+.hall-back-button,
 .hall-action-row button {
   display: inline-flex;
   min-height: 56px;
@@ -2672,6 +2679,7 @@ select {
 
 .hall-header-actions button[data-active='true'],
 .hall-header-actions button:hover,
+.hall-back-button:hover,
 .hall-action-row button {
   border-color: var(--app-border-strong);
   background: var(--app-nav-active);
