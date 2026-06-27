@@ -2730,17 +2730,6 @@ select {
   pointer-events: none;
 }
 
-.hall-home-with-web::before {
-  content: '';
-  position: absolute;
-  inset: 4rem 0 auto;
-  height: min(42vh, 28rem);
-  background:
-    radial-gradient(circle at 20% 35%, rgba(var(--brand-mint-rgb), 0.14), transparent 16rem),
-    radial-gradient(circle at 78% 28%, rgba(126, 200, 227, 0.1), transparent 17rem);
-  pointer-events: none;
-}
-
 .hall-home-with-web > :not(.hall-particle-web) {
   position: relative;
   z-index: 1;
