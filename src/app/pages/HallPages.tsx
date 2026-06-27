@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation, useNavigate, useSearchParams } from 'react-router';
 import {
-  ArrowLeft, BookOpen, BriefcaseBusiness, Building2, CalendarCheck,
-  CalendarDays, CheckCircle2, ChevronRight, Clock, CreditCard, DoorOpen,
-  GraduationCap, Home, Languages, MapPin, Moon, Navigation, Phone, ShieldCheck, Sparkles,
-  Sun, Trophy, Users,
+  ArrowLeft, ArrowUpDown, BookOpen, BriefcaseBusiness, Building2, Bus, CalendarCheck,
+  CalendarDays, Car, CheckCircle2, ChevronRight, Clock, CreditCard, DoorOpen,
+  Footprints, GraduationCap, Home, Languages, MapPin, Moon, Navigation, Phone, ShieldCheck, Sparkles,
+  Sun, Train, Trophy, Users,
 } from 'lucide-react';
 import logoMint from '../../assets/energo-logo-mint.png';
 import { HeroRobotModel } from '../components/HeroRobotModel';
@@ -20,7 +20,7 @@ import {
 } from '../data/campusData';
 import { filters as programFilters, programs } from './ProgramsPage';
 import { paymentCategories, QRPlaceholder } from './PaymentPage';
-import { contacts, hours, transportOptions } from './DirectionsPage';
+import { contacts, hours } from './DirectionsPage';
 
 type HallBuilding = 'A' | 'B' | 'D';
 
@@ -928,59 +928,245 @@ export const HallPaymentsPage: React.FC = () => {
   );
 };
 
+type HallRouteModeKey = 'bus' | 'metro' | 'car' | 'walk';
+type HallMapPoint = [number, number];
+
+const hallRouteModes: Array<{
+  key: HallRouteModeKey;
+  label: string;
+  icon: typeof Bus;
+  color: string;
+}> = [
+  { key: 'bus', label: 'Автобус', icon: Bus, color: '#7FB8A0' },
+  { key: 'metro', label: 'Метро', icon: Train, color: '#9B7EC8' },
+  { key: 'car', label: 'Авто', icon: Car, color: '#7EC8E3' },
+  { key: 'walk', label: 'Пешком', icon: Footprints, color: '#F7DC6F' },
+];
+
+const hallCampusPoint = {
+  name: 'Energo University',
+  detail: 'ул. Байтурсынова, 126/1',
+};
+
+const hallRoutePlaces: Array<{
+  key: string;
+  name: string;
+  area: string;
+  distance: string;
+  times: Record<HallRouteModeKey, string>;
+  routes: Record<HallRouteModeKey, string[]>;
+  mapPoints: HallMapPoint[];
+}> = [
+  {
+    key: 'mega-alma',
+    name: 'MEGA Alma-Ata',
+    area: 'Розыбакиева / Аль-Фараби',
+    distance: '8.4 км',
+    times: { bus: '35-45 мин', metro: '45-55 мин', car: '18-25 мин', walk: '1 ч 45 мин' },
+    mapPoints: [[17, 73], [28, 63], [40, 64], [52, 51], [64, 44], [76, 38]],
+    routes: {
+      bus: ['Сесть на автобус в сторону центра', 'Выйти у Байтурсынова', '5 минут пешком до главного входа'],
+      metro: ['Доехать до ближайшей станции метро', 'Пересесть на автобус до Байтурсынова', 'Пройти к корпусу A'],
+      car: ['Выезд на Аль-Фараби', 'Поворот к Байтурсынова', 'Парковка у главного входа'],
+      walk: ['Идти в сторону центра по Аль-Фараби', 'Подняться к Байтурсынова', 'Войти через главный вход'],
+    },
+  },
+  {
+    key: 'dostyk-plaza',
+    name: 'Dostyk Plaza',
+    area: 'Достык / Сатпаева',
+    distance: '4.7 км',
+    times: { bus: '20-30 мин', metro: '30-40 мин', car: '12-18 мин', walk: '55-70 мин' },
+    mapPoints: [[84, 23], [75, 29], [67, 36], [61, 45], [69, 49], [76, 38]],
+    routes: {
+      bus: ['Сесть на автобус по Сатпаева', 'Доехать до Байтурсынова', 'Перейти к главному входу'],
+      metro: ['Доехать до станции Байконур', 'Дальше автобусом или пешком', 'Войти со стороны Байтурсынова'],
+      car: ['Ехать по Сатпаева', 'Повернуть на Байтурсынова', 'Остановиться у корпуса A'],
+      walk: ['Идти по Сатпаева в сторону западной части', 'Повернуть на Байтурсынова', 'Дойти до главного входа'],
+    },
+  },
+  {
+    key: 'mega-park',
+    name: 'MEGA Park',
+    area: 'Сейфуллина / Макатаева',
+    distance: '5.2 км',
+    times: { bus: '25-35 мин', metro: '28-38 мин', car: '15-22 мин', walk: '1 ч 10 мин' },
+    mapPoints: [[21, 22], [31, 30], [43, 31], [52, 40], [64, 44], [76, 38]],
+    routes: {
+      bus: ['Сесть на автобус в сторону Байтурсынова', 'Проехать через центр', 'Выйти возле университета'],
+      metro: ['Дойти до метро', 'Доехать до Байконура', 'Пройти или пересесть на автобус'],
+      car: ['Выезд на Сейфуллина', 'Дальше через Сатпаева', 'Подъезд к Байтурсынова'],
+      walk: ['Идти через центр к Сатпаева', 'Повернуть к Байтурсынова', 'Дойти до корпуса A'],
+    },
+  },
+  {
+    key: 'forum',
+    name: 'Forum Almaty',
+    area: 'Сейфуллина / Тимирязева',
+    distance: '2.8 км',
+    times: { bus: '15-22 мин', metro: '24-32 мин', car: '8-14 мин', walk: '30-40 мин' },
+    mapPoints: [[46, 73], [51, 65], [56, 56], [63, 49], [70, 44], [76, 38]],
+    routes: {
+      bus: ['Сесть на автобус по Тимирязева', 'Доехать до Байтурсынова', 'Дойти до главного входа'],
+      metro: ['Доехать до Байконура', 'Короткая пересадка на автобус', 'Выйти у университета'],
+      car: ['Ехать по Тимирязева', 'Повернуть к Байтурсынова', 'Высадка у главного входа'],
+      walk: ['Идти по Тимирязева', 'Повернуть на Байтурсынова', 'Дойти до Energo University'],
+    },
+  },
+  {
+    key: 'atakent',
+    name: 'Atakent',
+    area: 'Тимирязева / Ауэзова',
+    distance: '2.4 км',
+    times: { bus: '12-18 мин', metro: '22-30 мин', car: '7-12 мин', walk: '25-35 мин' },
+    mapPoints: [[30, 63], [40, 58], [51, 54], [61, 47], [69, 43], [76, 38]],
+    routes: {
+      bus: ['Сесть на автобус по Тимирязева', 'Выйти на Байтурсынова', 'Пройти к корпусу A'],
+      metro: ['Дойти до ближайшего метро', 'Доехать до Байконура', 'Дальше короткий автобусный участок'],
+      car: ['Выезд с Тимирязева', 'Поворот на Байтурсынова', 'Парковка возле входа'],
+      walk: ['Идти по Тимирязева', 'Перейти к Байтурсынова', 'Дойти до главного входа'],
+    },
+  },
+  {
+    key: 'esentai',
+    name: 'Esentai Mall',
+    area: 'Аль-Фараби / Весновка',
+    distance: '5.1 км',
+    times: { bus: '25-35 мин', metro: '35-45 мин', car: '12-20 мин', walk: '1 ч 05 мин' },
+    mapPoints: [[74, 82], [68, 70], [61, 60], [59, 51], [67, 44], [76, 38]],
+    routes: {
+      bus: ['Сесть на автобус от Аль-Фараби', 'Доехать до Байтурсынова', '5 минут пешком до входа'],
+      metro: ['Доехать до станции Байконур', 'Пересесть на автобус или такси', 'Войти через главный вход'],
+      car: ['Ехать по Аль-Фараби', 'Свернуть к Байтурсынова', 'Остановиться у главного корпуса'],
+      walk: ['Идти вдоль Аль-Фараби', 'Подняться к Тимирязева', 'Дойти до Байтурсынова'],
+    },
+  },
+];
+
 export const HallDirectionsPage: React.FC = () => {
-  const [activeTransport, setActiveTransport] = useState(0);
-  const active = transportOptions[activeTransport];
-  const ActiveIcon = active.icon;
+  const [selectedPlaceKey, setSelectedPlaceKey] = useState(hallRoutePlaces[0].key);
+  const [activeModeKey, setActiveModeKey] = useState<HallRouteModeKey>('bus');
+  const [isReversed, setIsReversed] = useState(false);
+  const selectedPlace = hallRoutePlaces.find(place => place.key === selectedPlaceKey) ?? hallRoutePlaces[0];
+  const activeMode = hallRouteModes.find(mode => mode.key === activeModeKey) ?? hallRouteModes[0];
+  const ActiveIcon = activeMode.icon;
+  const routePoints = isReversed ? [...selectedPlace.mapPoints].reverse() : selectedPlace.mapPoints;
+  const routePolyline = routePoints.map(point => point.join(',')).join(' ');
+  const from = isReversed ? hallCampusPoint : { name: selectedPlace.name, detail: selectedPlace.area };
+  const to = isReversed ? { name: selectedPlace.name, detail: selectedPlace.area } : hallCampusPoint;
+  const pointA = routePoints[0];
+  const pointB = routePoints[routePoints.length - 1];
 
   return (
     <HallLayout title="Как добраться">
       <main className="hall-page hall-directions-page">
-        <section className="hall-detail-card hall-map-card" style={{ '--hall-accent': active.color } as React.CSSProperties}>
-          <header>
-            <div>
-              <span className="hall-detail-code">АУЭС им. Гумарбека Даукеева</span>
-              <h1>ул. Байтурсынова, 126/1</h1>
-              <p>Главный вход со стороны ул. Байтурсынова</p>
-            </div>
-            <div className="hall-detail-icon"><MapPin size={42} /></div>
-          </header>
-          <div className="hall-map-visual">
+        <section className="hall-detail-card hall-map-card hall-route-map-card" style={{ '--hall-accent': activeMode.color, '--route-color': activeMode.color } as React.CSSProperties}>
+          <div className="hall-mini-2gis-map">
             <div className="hall-map-grid" />
+            <div className="hall-map-zone hall-map-zone-a">Алмалинский район</div>
+            <div className="hall-map-zone hall-map-zone-b">Бостандыкский район</div>
             <div className="hall-map-road hall-map-road-a" />
             <div className="hall-map-road hall-map-road-b" />
-            <div className="hall-map-pin"><MapPin size={44} /></div>
+            <div className="hall-map-road hall-map-road-c" />
+            <div className="hall-map-road hall-map-road-d" />
+            <div className="hall-map-road hall-map-road-e" />
+            <div className="hall-map-street-label hall-map-label-a">Байтурсынова</div>
+            <div className="hall-map-street-label hall-map-label-b">Сатпаева</div>
+            <div className="hall-map-street-label hall-map-label-c">Тимирязева</div>
+
+            <svg className="hall-route-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <polyline className="hall-route-shadow" points={routePolyline} />
+              <polyline className="hall-route-line" points={routePolyline} />
+              {routePoints.slice(1, -1).map(point => (
+                <circle key={`${point[0]}-${point[1]}`} className="hall-route-dot" cx={point[0]} cy={point[1]} r="1.2" />
+              ))}
+            </svg>
+
+            <div className="hall-route-marker hall-route-marker-a" style={{ left: `${pointA[0]}%`, top: `${pointA[1]}%` }}>
+              <span>A</span>
+              <strong>{from.name}</strong>
+            </div>
+            <div className="hall-route-marker hall-route-marker-b" style={{ left: `${pointB[0]}%`, top: `${pointB[1]}%` }}>
+              <span>B</span>
+              <strong>{to.name}</strong>
+            </div>
+
+            <div className="hall-map-floating-card">
+              <span><ActiveIcon size={18} /> {activeMode.label}</span>
+              <strong>{selectedPlace.times[activeModeKey]}</strong>
+              <small>{selectedPlace.distance} · примерный маршрут</small>
+            </div>
           </div>
         </section>
 
         <section className="hall-direction-side">
-          <div className="hall-filter-panel">
-            <div>
-              <span className="hall-kicker">Транспорт</span>
-              <div className="hall-segment hall-transport-segment">
-                {transportOptions.map((option, index) => {
-                  const Icon = option.icon;
-                  return (
-                    <button key={option.title} type="button" data-active={activeTransport === index} onClick={() => setActiveTransport(index)}>
-                      <Icon size={24} />
-                      {option.title}
-                    </button>
-                  );
-                })}
+          <article className="hall-detail-card hall-route-control-card" style={{ '--hall-accent': activeMode.color } as React.CSSProperties}>
+            <div className="hall-route-points">
+              <div className="hall-route-point">
+                <span>A</span>
+                <div>
+                  <small>Откуда</small>
+                  <strong>{from.name}</strong>
+                  <p>{from.detail}</p>
+                </div>
+              </div>
+
+              <button type="button" className="hall-route-swap" onClick={() => setIsReversed(value => !value)} aria-label="Поменять точки маршрута">
+                <ArrowUpDown size={22} />
+              </button>
+
+              <div className="hall-route-point">
+                <span>B</span>
+                <div>
+                  <small>Куда</small>
+                  <strong>{to.name}</strong>
+                  <p>{to.detail}</p>
+                </div>
               </div>
             </div>
-          </div>
-          <article className="hall-detail-card" style={{ '--hall-accent': active.color } as React.CSSProperties}>
-            <span className="hall-detail-code"><ActiveIcon size={22} /> {active.title}</span>
-            <div className="hall-steps">
-              {active.options.map((option, index) => (
-                <div key={option.line}>
+
+            <div className="hall-route-picker">
+              <span className="hall-kicker">{isReversed ? 'Куда едем' : 'Приехать с'}</span>
+              <div className="hall-route-place-grid">
+                {hallRoutePlaces.map(place => (
+                  <button key={place.key} type="button" data-active={selectedPlace.key === place.key} onClick={() => setSelectedPlaceKey(place.key)}>
+                    <strong>{place.name}</strong>
+                    <small>{place.area}</small>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="hall-route-modes">
+              {hallRouteModes.map(mode => {
+                const Icon = mode.icon;
+                return (
+                  <button key={mode.key} type="button" data-active={activeModeKey === mode.key} onClick={() => setActiveModeKey(mode.key)} style={{ '--mode-color': mode.color } as React.CSSProperties}>
+                    <Icon size={21} />
+                    {mode.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="hall-route-summary">
+              <div>
+                <ActiveIcon size={24} />
+                <span>{selectedPlace.distance}</span>
+              </div>
+              <strong>{selectedPlace.times[activeModeKey]}</strong>
+            </div>
+
+            <div className="hall-steps hall-route-steps">
+              {selectedPlace.routes[activeModeKey].map((step, index) => (
+                <div key={step}>
                   <b>{index + 1}</b>
-                  <span><strong>{option.line}</strong>{option.desc}<em>{option.time}</em></span>
+                  <span>{step}</span>
                 </div>
               ))}
             </div>
           </article>
+
           <div className="hall-two-columns hall-small-panels">
             <section>
               <h2>Часы работы</h2>

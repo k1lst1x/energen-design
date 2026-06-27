@@ -3435,16 +3435,26 @@ select {
 
 .hall-directions-page {
   display: grid;
-  grid-template-columns: minmax(34rem, 0.9fr) minmax(0, 1.1fr);
+  grid-template-columns: minmax(0, 1.48fr) minmax(20rem, 0.52fr);
   gap: 1rem;
+  align-items: stretch;
+  box-sizing: border-box;
+  height: calc(100dvh - 86px);
+  min-height: 0;
+  overflow: hidden;
 }
 
-.hall-map-visual {
+.hall-route-map-card {
+  min-height: 100%;
+  padding: 0;
+}
+
+.hall-mini-2gis-map {
   position: relative;
-  min-height: clamp(28rem, 58vh, 46rem);
+  height: 100%;
+  min-height: 0;
   overflow: hidden;
-  border: 1px solid var(--app-border);
-  border-radius: 1rem;
+  border-radius: 1.25rem;
   background: var(--app-map-visual-bg);
 }
 
@@ -3452,63 +3462,466 @@ select {
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(rgba(127, 184, 160, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(127, 184, 160, 0.08) 1px, transparent 1px);
-  background-size: 52px 52px;
+    linear-gradient(rgba(127, 184, 160, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(127, 184, 160, 0.07) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(circle at 56% 45%, black 0%, rgba(0, 0, 0, 0.8) 48%, transparent 92%);
+}
+
+.hall-map-zone {
+  position: absolute;
+  display: flex;
+  min-height: 5rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(var(--brand-mint-rgb), 0.12);
+  border-radius: 1.2rem;
+  background: rgba(var(--brand-mint-rgb), 0.045);
+  color: rgba(255, 255, 255, 0.28);
+  font-size: clamp(1.05rem, 1.4vw, 1.45rem);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+:root[data-theme='light'] .hall-map-zone {
+  color: rgba(15, 25, 22, 0.24);
+}
+
+.hall-map-zone-a {
+  top: 8%;
+  left: 7%;
+  width: 36%;
+  height: 30%;
+  transform: rotate(-4deg);
+}
+
+.hall-map-zone-b {
+  right: 7%;
+  bottom: 9%;
+  width: 42%;
+  height: 34%;
+  transform: rotate(3deg);
 }
 
 .hall-map-road {
   position: absolute;
-  background: rgba(127, 184, 160, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.13);
+  box-shadow: 0 0 0 1px rgba(var(--brand-mint-rgb), 0.06);
+}
+
+:root[data-theme='light'] .hall-map-road {
+  background: rgba(18, 31, 28, 0.1);
 }
 
 .hall-map-road-a {
-  top: 42%;
-  left: 0;
-  right: 0;
-  height: 5px;
+  top: 41%;
+  left: -8%;
+  width: 118%;
+  height: 12px;
+  transform: rotate(-7deg);
 }
 
 .hall-map-road-b {
-  top: 0;
-  bottom: 0;
-  left: 34%;
-  width: 5px;
+  top: -12%;
+  left: 72%;
+  width: 13px;
+  height: 125%;
+  transform: rotate(13deg);
 }
 
-.hall-map-pin {
+.hall-map-road-c {
+  top: 70%;
+  left: -10%;
+  width: 112%;
+  height: 10px;
+  transform: rotate(5deg);
+}
+
+.hall-map-road-d {
+  top: -10%;
+  left: 36%;
+  width: 10px;
+  height: 122%;
+  transform: rotate(-12deg);
+}
+
+.hall-map-road-e {
+  top: 19%;
+  left: 5%;
+  width: 80%;
+  height: 8px;
+  transform: rotate(16deg);
+  opacity: 0.75;
+}
+
+.hall-map-street-label {
   position: absolute;
+  z-index: 3;
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 0.8rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+:root[data-theme='light'] .hall-map-street-label {
+  color: rgba(15, 25, 22, 0.42);
+}
+
+.hall-map-label-a {
   top: 38%;
-  left: 32%;
+  right: 13%;
+  transform: rotate(7deg);
+}
+
+.hall-map-label-b {
+  top: 22%;
+  left: 43%;
+  transform: rotate(16deg);
+}
+
+.hall-map-label-c {
+  left: 12%;
+  bottom: 24%;
+  transform: rotate(5deg);
+}
+
+.hall-route-svg {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.hall-route-shadow,
+.hall-route-line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.hall-route-shadow {
+  stroke: rgba(0, 0, 0, 0.45);
+  stroke-width: 11;
+}
+
+.hall-route-line {
+  stroke: var(--route-color);
+  stroke-width: 6;
+  filter: drop-shadow(0 0 18px color-mix(in srgb, var(--route-color) 45%, transparent));
+}
+
+.hall-route-dot {
+  fill: var(--route-color);
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--route-color) 70%, transparent));
+}
+
+.hall-route-marker {
+  position: absolute;
+  z-index: 6;
   display: flex;
-  width: 88px;
-  height: 88px;
+  max-width: min(16rem, 34%);
+  align-items: center;
+  gap: 0.5rem;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.hall-route-marker span {
+  display: flex;
+  width: 2.5rem;
+  height: 2.5rem;
   align-items: center;
   justify-content: center;
+  flex: 0 0 auto;
+  border: 3px solid var(--app-card);
   border-radius: 50%;
-  background: var(--brand-mint);
+  background: var(--route-color);
   color: #0f0f0f;
-  box-shadow: 0 0 0 18px rgba(var(--brand-mint-rgb), 0.13), 0 22px 60px rgba(var(--brand-mint-rgb), 0.28);
+  box-shadow: 0 10px 32px color-mix(in srgb, var(--route-color) 34%, transparent);
+  font-weight: 950;
+}
+
+.hall-route-marker strong {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--app-border);
+  border-radius: 999px;
+  background: var(--app-overlay-panel);
+  padding: 0.45rem 0.65rem;
+  color: var(--app-text-strong);
+  font-size: 0.85rem;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hall-route-marker-b span {
+  background: var(--app-text-strong);
+  color: var(--app-bg);
+}
+
+.hall-map-floating-card {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 7;
+  min-width: 14rem;
+  border: 1px solid var(--app-border);
+  border-radius: 1rem;
+  background: var(--app-overlay-panel);
+  padding: 0.9rem 1rem;
+  backdrop-filter: blur(18px);
+  box-shadow: 0 18px 44px var(--app-shadow);
+}
+
+.hall-map-floating-card span,
+.hall-map-floating-card small {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--app-text-muted);
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.hall-map-floating-card strong {
+  display: block;
+  margin: 0.3rem 0 0.15rem;
+  color: var(--app-text-strong);
+  font-size: 1.7rem;
+  font-weight: 950;
 }
 
 .hall-direction-side {
   display: flex;
+  height: 100%;
   min-width: 0;
+  min-height: 0;
   flex-direction: column;
   gap: 1rem;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+  overscroll-behavior: contain;
 }
 
-.hall-transport-segment button {
+.hall-route-control-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 0 0 auto;
+}
+
+.hall-route-points {
+  position: relative;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.hall-route-points::before {
+  content: '';
+  position: absolute;
+  top: 2.35rem;
+  bottom: 2.35rem;
+  left: 1.25rem;
+  width: 2px;
+  background: linear-gradient(var(--hall-accent), color-mix(in srgb, var(--hall-accent) 20%, transparent));
+}
+
+.hall-route-point {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+  min-height: 4.8rem;
+  border: 1px solid var(--app-border);
+  border-radius: 1rem;
+  background: var(--app-bg-soft);
+  padding: 0.75rem;
+}
+
+.hall-route-point > span {
+  display: flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--hall-accent);
+  color: #0f0f0f;
+  font-weight: 950;
+}
+
+.hall-route-point small,
+.hall-route-place-grid small {
+  display: block;
+  color: var(--app-text-soft);
+  font-size: 0.78rem;
+  font-weight: 850;
+  line-height: 1.25;
+}
+
+.hall-route-point strong,
+.hall-route-place-grid strong {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--app-text-strong);
+  font-weight: 950;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.hall-route-point p {
+  margin: 0.15rem 0 0;
+  color: var(--app-text-muted);
+  font-size: 0.9rem;
+  line-height: 1.25;
+}
+
+.hall-route-swap {
+  position: absolute;
+  top: 50%;
+  right: 0.85rem;
+  z-index: 3;
+  display: flex;
+  width: 2.7rem;
+  height: 2.7rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--hall-accent) 42%, var(--app-border));
+  border-radius: 50%;
+  background: var(--app-card);
+  color: var(--hall-accent);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.hall-route-swap:hover {
+  background: color-mix(in srgb, var(--hall-accent) 16%, var(--app-card));
+}
+
+.hall-route-picker {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.hall-route-place-grid {
+  display: grid;
+  gap: 0.5rem;
+  max-height: 17rem;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+}
+
+.hall-route-place-grid button {
+  width: 100%;
+  min-height: 4rem;
+  border: 1px solid var(--app-border);
+  border-radius: 0.85rem;
+  background: var(--app-bg-soft);
+  padding: 0.7rem 0.8rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.hall-route-place-grid button[data-active='true'] {
+  border-color: color-mix(in srgb, var(--hall-accent) 55%, transparent);
+  background: color-mix(in srgb, var(--hall-accent) 14%, var(--app-bg-soft));
+}
+
+.hall-route-modes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.45rem;
 }
 
+.hall-route-modes button {
+  display: flex;
+  min-width: 0;
+  min-height: 3.3rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  border: 1px solid var(--app-border);
+  border-radius: 0.85rem;
+  background: var(--app-bg-soft);
+  color: var(--app-text-muted);
+  font-size: 0.86rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.hall-route-modes button[data-active='true'] {
+  border-color: color-mix(in srgb, var(--mode-color) 58%, transparent);
+  background: color-mix(in srgb, var(--mode-color) 18%, var(--app-bg-soft));
+  color: var(--app-text-strong);
+}
+
+.hall-route-modes svg {
+  color: var(--mode-color);
+}
+
+.hall-route-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 4.3rem;
+  border: 1px solid color-mix(in srgb, var(--hall-accent) 34%, var(--app-border));
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--hall-accent) 10%, var(--app-bg-soft));
+  padding: 0.8rem 0.95rem;
+}
+
+.hall-route-summary div {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--hall-accent);
+  font-weight: 900;
+}
+
+.hall-route-summary strong {
+  color: var(--app-text-strong);
+  font-size: 1.45rem;
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+.hall-route-steps > div {
+  padding: 0.72rem;
+}
+
+.hall-route-steps {
+  max-height: 13rem;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+}
+
+.hall-route-steps span {
+  color: var(--app-text);
+  line-height: 1.4;
+}
+
 .hall-small-panels {
+  grid-template-columns: 1fr;
   margin-top: 0;
 }
 
+.hall-small-panels > section {
+  min-width: 0;
+}
+
 .hall-small-panels p {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 1rem;
   margin: 0.55rem 0 0;
   color: var(--app-text-muted);
@@ -3517,6 +3930,83 @@ select {
 .hall-small-panels b,
 .hall-small-panels span {
   color: var(--app-text);
+  line-height: 1.35;
+}
+
+.hall-small-panels span {
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (max-width: 1180px) {
+  .hall-directions-page {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: calc(100dvh - 86px);
+    overflow: visible;
+  }
+
+  .hall-mini-2gis-map {
+    min-height: clamp(30rem, 58vh, 42rem);
+  }
+
+  .hall-direction-side {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.9fr);
+    height: auto;
+    overflow: visible;
+    padding-right: 0;
+  }
+
+  .hall-small-panels {
+    align-content: start;
+  }
+}
+
+@media (max-width: 767px) {
+  .hall-directions-page {
+    gap: 0.85rem;
+  }
+
+  .hall-mini-2gis-map {
+    min-height: 26rem;
+  }
+
+  .hall-route-marker {
+    max-width: 42%;
+  }
+
+  .hall-route-marker strong {
+    display: none;
+  }
+
+  .hall-map-floating-card {
+    right: 0.75rem;
+    bottom: 0.75rem;
+    min-width: 11.5rem;
+  }
+
+  .hall-direction-side {
+    display: flex;
+  }
+
+  .hall-route-modes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .hall-route-place-grid {
+    max-height: none;
+  }
+
+  .hall-small-panels p {
+    grid-template-columns: 1fr;
+    gap: 0.2rem;
+  }
+
+  .hall-small-panels span {
+    text-align: left;
+    white-space: normal;
+  }
 }
 
 @media (max-width: 1180px) {
