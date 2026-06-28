@@ -412,10 +412,10 @@ export const HallRoomPage: React.FC = () => {
 
         <section className="hall-directory-layout">
           <aside className="hall-list">
-            <div className="hall-list-head">
+            {/* <div className="hall-list-head">
               <strong>{filteredRooms.length}</strong>
               <span>кабинетов</span>
-            </div>
+            </div> */}
             {filteredRooms.map(room => (
               <button
                 key={room.id}
@@ -485,44 +485,38 @@ export const HallRoomPage: React.FC = () => {
 };
 
 export const HallEmployeePage: React.FC = () => {
-  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<'Все' | StaffCategory>('Все');
   const alphabet = useMemo(() => ['Все', ...Array.from(new Set(staff.map(member => member.name[0]))).sort()], []);
   const [activeLetter, setActiveLetter] = useState('Все');
-  const [activeBuilding, setActiveBuilding] = useState<'Все' | HallBuilding>('Все');
   const [selectedId, setSelectedId] = useState(staff[0].id);
 
   const filteredStaff = useMemo(() => staff
     .filter(member => activeCategory === 'Все' || member.category === activeCategory)
     .filter(member => activeLetter === 'Все' || member.name.startsWith(activeLetter))
-    .filter(member => activeBuilding === 'Все' || getHallBuilding(`${member.room} ${member.corpus}`) === activeBuilding)
-    .sort((a, b) => a.name.localeCompare(b.name, 'ru')), [activeBuilding, activeCategory, activeLetter]);
+    .sort((a, b) => a.name.localeCompare(b.name, 'ru')), [activeCategory, activeLetter]);
 
   const selected = filteredStaff.find(member => member.id === selectedId) ?? filteredStaff[0] ?? staff[0];
   const CategoryIcon = categoryIcons[selected.category];
   const presenceColor = presenceColors[selected.presence] ?? selected.color;
+  const hasDisciplines = Boolean(selected.disciplines?.length);
 
   return (
     <HallLayout title="Сотрудники">
-      <main className="hall-page">
-        <section className="hall-filter-panel">
+      <main className="hall-page hall-employee-page">
+        <section className="hall-filter-panel hall-employee-filters">
           <div>
             <span className="hall-kicker">Категория</span>
             <HallSegment items={categories} active={activeCategory} onChange={setActiveCategory} />
           </div>
-          <div>
+          <div className="hall-employee-alphabet">
             <span className="hall-kicker">Алфавит</span>
             <HallSegment items={alphabet} active={activeLetter} onChange={setActiveLetter} />
           </div>
-          <div>
-            <span className="hall-kicker">Корпус</span>
-            <HallSegment items={['Все', ...hallBuildings]} active={activeBuilding} onChange={setActiveBuilding} getLabel={item => item === 'Все' ? item : displayCorpus(item)} />
-          </div>
         </section>
 
-        <section className="hall-directory-layout">
+        <section className="hall-directory-layout hall-employee-layout">
           <aside className="hall-list hall-employee-list">
-            <div className="hall-list-head"><strong>{filteredStaff.length}</strong><span>сотрудников</span></div>
+            {/* <div className="hall-list-head"><strong>{filteredStaff.length}</strong><span>сотрудников</span></div> */}
             {filteredStaff.map(member => {
               const Icon = categoryIcons[member.category];
               return (
@@ -537,14 +531,14 @@ export const HallEmployeePage: React.FC = () => {
                   <img src={member.photo} alt="" />
                   <span>
                     <b>{member.name}</b>
-                    <small><Icon size={15} /> {member.category} · {displayHallRoomCode(member.room)}</small>
+                    <small><Icon size={15} /> {member.category} · {member.institute ?? member.department}</small>
                   </span>
                 </button>
               );
             })}
           </aside>
 
-          <article className="hall-detail-card hall-person-detail" style={{ '--hall-accent': selected.color } as React.CSSProperties}>
+          <article className="hall-detail-card hall-person-detail" data-has-disciplines={hasDisciplines} style={{ '--hall-accent': selected.color } as React.CSSProperties}>
             <header>
               <img src={selected.photo} alt={selected.name} />
               <div>
@@ -555,19 +549,40 @@ export const HallEmployeePage: React.FC = () => {
             </header>
 
             <div className="hall-facts-grid hall-person-facts">
-              <section><MapPin size={24} /><span>{displayHallRoomCode(selected.room)}, {selected.floor}, {displayCorpus(getHallBuilding(`${selected.room} ${selected.corpus}`))}</span></section>
+              <section><MapPin size={24} /><span>{displayHallRoomCode(selected.room)}, {selected.floor}</span></section>
+              <section><Building2 size={24} /><span>{selected.institute ?? selected.department}</span></section>
               <section><Clock size={24} /><span>{selected.hours}</span></section>
               <section style={{ color: presenceColor }}><ShieldCheck size={24} /><span>{selected.presence}</span></section>
             </div>
 
-            <div className="hall-two-columns">
-              <section>
+            <div className="hall-employee-panels">
+              <section className="hall-employee-info-panel">
+                <h2>Информация</h2>
+                <div className="hall-employee-meta">
+                  <p><b>Институт</b><span>{selected.institute ?? selected.department}</span></p>
+                  {selected.chair && <p><b>Кафедра</b><span>{selected.chair}</span></p>}
+                  <p><b>Email</b><span>{selected.email}</span></p>
+                  <p><b>Телефон</b><span>{selected.phone}</span></p>
+                </div>
+              </section>
+
+              {hasDisciplines ? (
+                <section className="hall-employee-disciplines">
+                  <h2>Дисциплины</h2>
+                  <div>
+                    {selected.disciplines.map(discipline => <p key={discipline}>{discipline}</p>)}
+                  </div>
+                </section>
+              ) : null}
+
+              <section className="hall-employee-questions-panel">
                 <h2>Вопросы</h2>
                 <div className="hall-chip-cloud">
                   {selected.questions.map(question => <span key={question}>{question}</span>)}
                 </div>
               </section>
-              <section>
+
+              <section className="hall-employee-hours-panel">
                 <h2>Ближайшие часы</h2>
                 <div className="hall-slot-grid">
                   {selected.schedule.map(slot => (
@@ -579,12 +594,6 @@ export const HallEmployeePage: React.FC = () => {
               </section>
             </div>
 
-            <div className="hall-action-row">
-              <button type="button" onClick={() => navigate(routeToRoom(selected.room))}>
-                <Navigation size={24} />
-                Показать кабинет
-              </button>
-            </div>
           </article>
         </section>
       </main>
@@ -674,7 +683,7 @@ export const HallEventsPage: React.FC = () => {
 
         <section className="hall-directory-layout">
           <aside className="hall-list">
-            <div className="hall-list-head"><strong>{filteredEvents.length}</strong><span>мероприятий</span></div>
+            {/* <div className="hall-list-head"><strong>{filteredEvents.length}</strong><span>мероприятий</span></div> */}
             {filteredEvents.map(event => (
               <button key={event.id} type="button" className="hall-list-item" data-active={selected.id === event.id} onClick={() => setSelectedId(event.id)} style={{ '--hall-accent': event.color } as React.CSSProperties}>
                 <b>{event.dateShort.day} {event.dateShort.month}</b>
@@ -748,7 +757,7 @@ export const HallClubsPage: React.FC = () => {
         </section>
         <section className="hall-directory-layout">
           <aside className="hall-list">
-            <div className="hall-list-head"><strong>{filteredClubs.length}</strong><span>клуба</span></div>
+            {/* <div className="hall-list-head"><strong>{filteredClubs.length}</strong><span>клуба</span></div> */}
             {filteredClubs.map(club => (
               <button key={club.id} type="button" className="hall-list-item" data-active={selected.id === club.id} onClick={() => { setSelectedId(club.id); setActivePhoto(0); }} style={{ '--hall-accent': club.color } as React.CSSProperties}>
                 <b>{directions.find(item => item.key === club.direction)?.label ?? 'Клуб'}</b>
@@ -814,7 +823,7 @@ export const HallProgramsPage: React.FC = () => {
         </section>
         <section className="hall-directory-layout">
           <aside className="hall-list">
-            <div className="hall-list-head"><strong>{filteredPrograms.length}</strong><span>программы</span></div>
+            {/* <div className="hall-list-head"><strong>{filteredPrograms.length}</strong><span>программы</span></div> */}
             {filteredPrograms.map(program => (
               <button key={program.id} type="button" className="hall-list-item" data-active={selected.id === program.id} onClick={() => { setSelectedId(program.id); setActivePhoto(0); }} style={{ '--hall-accent': program.color } as React.CSSProperties}>
                 <b>{program.code}</b>
